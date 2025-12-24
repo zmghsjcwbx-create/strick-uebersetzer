@@ -978,7 +978,7 @@ function getTechSupportText() {
   }
   const input = document.getElementById('input').value;
   const output = document.getElementById('output').innerText || "(keine Ausgabe)";
-  const text = `Hallo Tobi, ich brauche Hilfe beim Strick-Übersetzer.%0A%0ASession-ID: ${currentSessionId}%0AEingabe: ${encodeURIComponent(input)}%0AOutput: ${encodeURIComponent(output)}`;
+  const text = `Hallo Jan, ich brauche Tech-Support beim Strick-Übersetzer.%0A%0ASession-ID: ${currentSessionId}%0AEingabe: ${encodeURIComponent(input)}%0AOutput: ${encodeURIComponent(output)}`;
   return text;
 }
 
@@ -1401,7 +1401,7 @@ techSupportLink.addEventListener('click', (e) => {
   }
   saveSession();
   const supportText = getTechSupportText();
-  window.location.href = `sms:+491701234567&body=${supportText}`;
+  window.location.href = `sms:+4915257345268&body=${supportText}`;
 });
 
 // Initial
