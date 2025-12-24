@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="de">
-  <title>Kerstins Strick-Übersetzer</title>
 <head>
   <meta charset="UTF-8">
   <title>Dein Strick-Übersetzer – DE · EN · FR</title>
@@ -22,6 +21,9 @@
       --danger: #b91c1c;
       --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --table-head-bg: #eff1ff;
+      --quote-bg: #eef2ff;
+      --quote-border: #d1d5ff;
+      --output-bg: #f9fafb;
     }
 
     * { box-sizing: border-box; }
@@ -49,9 +51,9 @@
 
     h1 {
       margin: 0;
-      font-size: 1.8rem;
+      font-size: 1.9rem;
       text-align: center;
-      font-weight: 650;
+      font-weight: 700;
       letter-spacing: -0.02em;
     }
 
@@ -118,20 +120,23 @@
       color: #ffffff;
       border: none;
       border-radius: 999px;
-      padding: 8px 22px;
-      font-size: 0.95rem;
+      padding: 9px 24px;
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
-      transition: background 0.2s ease, transform 0.05s ease;
+      transition: background 0.2s ease, transform 0.05s ease, box-shadow 0.1s ease;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
     }
 
     button:hover {
       background: #2746c9;
+      box-shadow: 0 5px 14px rgba(37, 99, 235, 0.45);
     }
 
     button:active {
       transform: scale(0.98);
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
     }
 
     .controls-inline {
@@ -166,31 +171,33 @@
 
     .output {
       margin-top: 14px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: #f9fafb;
-      padding: 10px 12px 12px;
-      min-height: 40px;
-      font-size: 0.93rem;
+      border-radius: 16px;
+      border: 2px solid var(--accent);
+      background: var(--output-bg);
+      padding: 14px 14px 16px;
+      min-height: 52px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      font-weight: 500;
       transition: background 0.2s ease, border-color 0.2s ease;
     }
 
     .warning {
       color: var(--danger);
       font-weight: 600;
-      font-size: 0.85rem;
-      margin-bottom: 6px;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
     }
 
     .section-title {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--text-muted);
       margin: 6px 0 4px;
     }
 
     .secondary-row {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
       margin-top: 8px;
     }
@@ -247,40 +254,25 @@
       cursor: pointer;
     }
 
-    .font-buttons {
-      display: inline-flex;
-      gap: 4px;
-    }
-
-    .font-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.6);
-      padding: 2px 8px;
-      background: rgba(255,255,255,0.9);
-      cursor: pointer;
-      font-size: 0.8rem;
-    }
-
-    .font-btn.active {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
+    /* Schriftgrößen-Buttons vorerst unsichtbar lassen */
+    .font-buttons-wrapper {
+      display: none;
     }
 
     /* Zitatbox */
     .quote-box {
-      margin-top: 12px;
-      padding: 12px 14px;
+      margin-top: 16px;
+      padding: 14px 16px;
       border-radius: 14px;
-      background: #eef2ff;
-      border: 1px solid #d1d5ff;
-      font-size: 0.95rem;
-      color: #111827;
+      background: var(--quote-bg);
+      border: 1px solid var(--quote-border);
+      font-size: 0.98rem;
+      color: var(--text-main);
     }
 
     .quote-text {
       font-style: italic;
-      font-size: 1rem;
+      font-size: 1.02rem;
     }
 
     .quote-author {
@@ -290,7 +282,7 @@
 
     .quote-source {
       font-size: 0.8rem;
-      color: #4b5563;
+      color: var(--text-muted);
     }
 
     /* Verlauf */
@@ -351,7 +343,7 @@
         border-radius: 14px;
       }
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
       }
       .top-row {
         flex-direction: column;
@@ -378,7 +370,7 @@
     <input type="checkbox" id="darkToggle">
     Dark&nbsp;Mode
   </label>
-  <div class="top-toggle-label">
+  <div class="top-toggle-label font-buttons-wrapper">
     Schrift:
     <div class="font-buttons">
       <button type="button" class="font-btn active" data-size="normal">Normal</button>
@@ -459,8 +451,11 @@
         <tr><td>Perlmuster</td><td>moss stitch</td><td>point de riz</td><td>abwechselnd re/li, versetzt in der Höhe</td></tr>
       </table>
     </div>
+  </div>
 
-    <p style="margin-top:10px;font-size:0.85rem;color:#6b7280;">
+  <div class="card">
+    <h2>Tech‑Support</h2>
+    <p style="margin-top:4px;font-size:0.9rem;color:#6b7280;">
       Brauchst du Hilfe?
       <a href="sms:+491701234567&body=Hallo%20Tobi,%20ich%20brauche%20Hilfe%20beim%20Strick-%C3%9Cbersetzer."
          style="color:#2563eb;text-decoration:none;">
@@ -623,14 +618,44 @@ function renderQuoteBlock() {
   `;
 }
 
-// Verlauf
-let historyEntries = []; // {text, timestamp}
+// Verlauf in localStorage
+const HISTORY_KEY = "strickUebersetzerHistoryV1";
+let historyEntries = []; // {text, time}
+
+// aus localStorage laden
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    if (!raw) {
+      historyEntries = [];
+      return;
+    }
+    const arr = JSON.parse(raw);
+    if (Array.isArray(arr)) {
+      historyEntries = arr;
+    } else {
+      historyEntries = [];
+    }
+  } catch (e) {
+    historyEntries = [];
+  }
+}
+
+// in localStorage speichern
+function saveHistory() {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(historyEntries));
+  } catch (e) {
+    // Ignorieren, wenn localStorage nicht verfügbar
+  }
+}
 
 function addToHistory(text) {
   const trimmed = text.trim();
   if (!trimmed) return;
-  historyEntries.unshift({ text: trimmed, time: new Date() });
+  historyEntries.unshift({ text: trimmed, time: Date.now() });
   if (historyEntries.length > 100) historyEntries.pop();
+  saveHistory();
   renderHistory();
 }
 
@@ -648,13 +673,14 @@ function renderHistory() {
     li.innerHTML = `<span>#${historyEntries.length - idx}</span>${shortText}`;
     li.addEventListener("click", () => {
       document.getElementById('input').value = entry.text;
-      doTranslate(false); // ohne erneut in die Historie einzutragen
+      // aus Historie: keine neue Historie, kein neuer Zitat-Trigger
+      doTranslate(false, false);
     });
     ul.appendChild(li);
   });
 }
 
-function doTranslate(addHistory = true) {
+function doTranslate(addHistory = true, triggerQuote = true) {
   const raw = document.getElementById('input').value;
   const mainLang = document.getElementById('mainLang').value;
   const showOthers = document.getElementById('showOthers').checked;
@@ -785,10 +811,11 @@ function doTranslate(addHistory = true) {
 
   document.getElementById('output').innerHTML = html;
 
-  // Zitat unten separat anzeigen
-  if (shouldShowQuote()) {
+  // Zitat nur bei echten neuen Übersetzungen triggen
+  if (triggerQuote && shouldShowQuote()) {
     document.getElementById('quote').innerHTML = renderQuoteBlock();
-  } else {
+  } else if (!triggerQuote) {
+    // aus Historie: kein neues Zitat
     document.getElementById('quote').innerHTML = "";
   }
 }
@@ -798,23 +825,21 @@ const bodyEl = document.body;
 
 function applyDarkMode(on) {
   if (on) {
-    document.documentElement.style.setProperty("--bg", "#0f172a");
-    document.documentElement.style.setProperty("--card-bg", "#111827");
+    document.documentElement.style.setProperty("--bg", "#020617");
+    document.documentElement.style.setProperty("--card-bg", "#0f172a");
     document.documentElement.style.setProperty("--text-main", "#e5e7eb");
     document.documentElement.style.setProperty("--text-muted", "#9ca3af");
     document.documentElement.style.setProperty("--border", "#1f2937");
-    document.documentElement.style.setProperty("--table-head-bg", "#1f2937");
+    document.documentElement.style.setProperty("--table-head-bg", "#111827");
+    document.documentElement.style.setProperty("--quote-bg", "#111827");
+    document.documentElement.style.setProperty("--quote-border", "#1f2937");
+    document.documentElement.style.setProperty("--output-bg", "#020617");
     bodyEl.style.background = "var(--bg)";
     const textareas = document.querySelectorAll("textarea");
     textareas.forEach(t => {
       t.style.background = "#020617";
       t.style.color = "#e5e7eb";
       t.style.borderColor = "#1f2937";
-    });
-    const outputs = document.querySelectorAll(".output");
-    outputs.forEach(o => {
-      o.style.background = "#020617";
-      o.style.borderColor = "#1f2937";
     });
   } else {
     document.documentElement.style.setProperty("--bg", "#f5f7fb");
@@ -823,17 +848,15 @@ function applyDarkMode(on) {
     document.documentElement.style.setProperty("--text-muted", "#6b7280");
     document.documentElement.style.setProperty("--border", "#e5e7eb");
     document.documentElement.style.setProperty("--table-head-bg", "#eff1ff");
+    document.documentElement.style.setProperty("--quote-bg", "#eef2ff");
+    document.documentElement.style.setProperty("--quote-border", "#d1d5ff");
+    document.documentElement.style.setProperty("--output-bg", "#f9fafb");
     bodyEl.style.background = "var(--bg)";
     const textareas = document.querySelectorAll("textarea");
     textareas.forEach(t => {
       t.style.background = "#ffffff";
       t.style.color = "#111827";
       t.style.borderColor = "var(--border)";
-    });
-    const outputs = document.querySelectorAll(".output");
-    outputs.forEach(o => {
-      o.style.background = "#f9fafb";
-      o.style.borderColor = "var(--border)";
     });
   }
 }
@@ -852,7 +875,7 @@ document.getElementById('darkToggle').addEventListener('change', (e) => {
   applyDarkMode(e.target.checked);
 });
 
-// Schriftgrößen-Buttons
+// Schriftgrößen-Buttons (aktuell unsichtbar, aber funktionsfähig)
 const fontButtons = document.querySelectorAll(".font-btn");
 fontButtons.forEach(btn => {
   btn.addEventListener("click", () => {
@@ -878,11 +901,28 @@ tableToggle.addEventListener("click", () => {
   }
 });
 
-// Initial Verlauf
+// Initial Verlauf laden
+loadHistory();
 renderHistory();
 
-// Button-Handler
-document.getElementById('btn').addEventListener('click', () => doTranslate(true));
+// Button-Handler: echte neue Übersetzung -> Quote darf triggern
+document.getElementById('btn').addEventListener('click', () => doTranslate(true, true));
+
+/*
+Beispiel-Eingaben zum Testen:
+
+1) Deutsch:
+   Umschlag, 2 re zus., 3 li, 4 re
+
+2) Englisch:
+   yo, k2tog, p2, k4, to end
+
+3) Gemischt:
+   Anschlag, 10 re, 10 li, 1x1 rib, bind off
+
+4) Französisch:
+   jeté, 2 m. end. ens., 3 m.env., jusqu'à la fin
+*/
 </script>
 </body>
 </html>
