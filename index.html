@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
+  <title>Kersins Strick-Übersetzer</title>
 <head>
   <meta charset="UTF-8">
-  <title>Kerstins Strickübersetzer – DE · EN · FR</title>
+  <title>Dein Strick-Übersetzer – DE · EN · FR</title>
 
   <!-- Favicon: Datei favicon.png ins Repo legen -->
   <link rel="icon" type="image/png" href="favicon.png">
@@ -41,7 +42,7 @@
     .page {
       max-width: 960px;
       margin: 0 auto;
-      padding: 60px 14px 36px;
+      padding: 60px 14px 36px; /* Platz für fixe Topbar */
       position: relative;
     }
 
@@ -137,16 +138,6 @@
     button:active {
       transform: scale(0.98);
       box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-    }
-
-    .btn-example {
-      background: #10b981;
-      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35);
-    }
-
-    .btn-example:hover {
-      background: #059669;
-      box-shadow: 0 5px 14px rgba(16, 185, 129, 0.45);
     }
 
     .controls-inline {
@@ -264,10 +255,12 @@
       cursor: pointer;
     }
 
+    /* Schriftgrößen-Buttons vorerst unsichtbar lassen */
     .font-buttons-wrapper {
       display: none;
     }
 
+    /* Zitatbox */
     .quote-box {
       margin-top: 16px;
       padding: 14px 16px;
@@ -293,6 +286,7 @@
       color: var(--text-muted);
     }
 
+    /* Verlauf */
     .history-list {
       list-style: none;
       padding-left: 0;
@@ -326,6 +320,7 @@
       margin: 0;
     }
 
+    /* Tabelle einklappbar */
     .table-toggle {
       cursor: pointer;
       display: inline-flex;
@@ -341,17 +336,6 @@
 
     .hidden {
       display: none;
-    }
-
-    .session-id-display {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 6px;
-      padding: 4px 6px;
-      background: rgba(0,0,0,0.03);
-      border-radius: 4px;
-      font-family: monospace;
-      word-break: break-all;
     }
 
     @media (max-width: 640px) {
@@ -400,7 +384,7 @@
 <div class="page">
   <header>
     <h1>Dein Strick-Übersetzer</h1>
-    <p class="subtitle">Deutsch · Englisch · Französisch – klar und übersichtlich, auch für Handy & Tablet.</p>
+    <p class="subtitle">Deutsch · Englisch · Französisch – klar und übersichtlich, auch für Handy &amp; Tablet.</p>
   </header>
 
   <div class="card">
@@ -409,10 +393,7 @@
       placeholder="Schreibe hier deine Strickanweisung, z.B.:  Umschlag, 2 re zus., 3 li, 4 re"></textarea>
 
     <div class="top-row">
-      <div>
-        <button id="btn">Übersetzen</button>
-        <button id="btnExample" class="btn-example">Zufälliges Beispiel</button>
-      </div>
+      <button id="btn">Übersetzen</button>
 
       <div class="controls-inline">
         <div>
@@ -477,17 +458,16 @@
     <h2>Tech‑Support</h2>
     <p style="margin-top:4px;font-size:0.9rem;color:#6b7280;">
       Brauchst du Hilfe?
-      <a id="techSupportLink"
+      <a href="sms:+4915257345268&body=Hallo%20Jan,%20ich%20brauche%20Tech-Support%20beim%20Strick-%C3%9Cbersetzer."
          style="color:#2563eb;text-decoration:none;">
         Tech‑Support per Nachricht öffnen
       </a>
     </p>
-    <div id="sessionInfo" class="session-id-display" style="display:none;"></div>
   </div>
 </div>
 
 <script>
-// Beispiel-Wörterbuch
+// Wörterbuch mit Kurz- und Langform
 const dict = [
   { deShort: "re", deLong: "rechte Masche",
     enShort: "k",  enLong: "knit",
@@ -534,66 +514,62 @@ const dict = [
     frShort: "côtes 2x2", frLong: "côtes 2x2" }
 ];
 
-// Beispiele (nur EN + FR)
-const examples = {
-  en: [
-    "yo, k2tog, p2, to end",
-    "cast on 20, 1x1 rib, k5, ssk, bind off",
-    "k3, yo, k2tog, k4, yo, p1, to end",
-    "p2, k2tog, k3, yo, ssk, p2",
-    "k1, p1 to end, cast on, bind off"
-  ],
-  fr: [
-    "jeté, 2 m. end. ens., 3 m.env., rabattre",
-    "monter, côtes 1x1, 2 m. ens. à l'end., surjet, rabattre",
-    "endroit, jeté, 2 m.end. ens., envers jusqu'à la fin",
-    "maille envers, 2 m.env. ens., jeté, endroit",
-    "monter 10, point mousse, rabattre"
-  ]
-};
-
-// Session & Debug Log
-let currentSessionId = null;
-let sessionLog = [];
-
-function generateSessionId() {
-  return "SID_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+function normalize(str) {
+  return str
+    .toLowerCase()
+    .replace(/[`´‘’]/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function logEvent(type, data) {
-  sessionLog.push({
-    timestamp: new Date().toISOString(),
-    type: type,
-     data
-  });
-}
+// numerische Muster (3 li, k2 etc.)
+function matchNumericPattern(chunk) {
+  const t = normalize(chunk);
+  const regex = /(\d+)\s*(li|re|k|p)/g;
+  let matches = [];
+  let m;
+  while ((m = regex.exec(t)) !== null) {
+    const count = m[1];
+    const code  = m[2];
 
-function saveSession() {
-  const key = "strickSession_" + currentSessionId;
-  const session = {
-    id: currentSessionId,
-    created: new Date().toISOString(),
-    log: sessionLog,
-    userAgent: navigator.userAgent
-  };
-  try {
-    localStorage.setItem(key, JSON.stringify(session));
-  } catch (e) {
-    console.warn("localStorage nicht verfügbar");
+    let entry;
+    if (code === "li" || code === "p") {
+      entry = dict.find(e => e.deLong === "linke Masche");
+    } else {
+      entry = dict.find(e => e.deLong === "rechte Masche");
+    }
+    if (!entry) continue;
+
+    matches.push({ count, entry, code });
   }
+  return matches.length ? matches : null;
 }
 
-function getTechSupportText() {
-  if (!currentSessionId) {
-    currentSessionId = generateSessionId();
+// generelles Dictionary-Match
+function matchChunkDirect(chunk) {
+  const t = normalize(chunk);
+
+  for (const e of dict) {
+    if (
+      t.includes(normalize(e.deShort)) || t.includes(normalize(e.deLong)) ||
+      t.includes(normalize(e.enShort)) || t.includes(normalize(e.enLong)) ||
+      t.includes(normalize(e.frShort)) || t.includes(normalize(e.frLong))
+    ) {
+      return e;
+    }
   }
-  const input = document.getElementById('input').value;
-  const output = document.getElementById('output').innerText || "(keine Ausgabe)";
-  const text = `Hallo Tobi, ich brauche Hilfe beim Strick-Übersetzer.%0A%0ASession-ID: ${currentSessionId}%0AEingabe: ${encodeURIComponent(input)}%0AOutput: ${encodeURIComponent(output)}`;
-  return text;
+  return null;
 }
 
-// Zitate
+function detectLangHint(chunk) {
+  const t = normalize(chunk);
+  if (/[àâçéèêëîïôùûüÿœ]/.test(t)) return "fr";
+  if (t.match(/\b(k|p|yo|ssk|k2tog|p2tog|co|bo)\b/)) return "en";
+  if (/[äöüß]/.test(t)) return "de";
+  return "unknown";
+}
+
+// Zitate-Logik
 const quotes = [
   {
     text: "In der Beschränkung zeigt sich der Meister.",
@@ -636,85 +612,42 @@ function renderQuoteBlock() {
   const q = quotes[Math.floor(Math.random() * quotes.length)];
   return `
     <div class="quote-box">
-      <div class="quote-text">„${q.text}"</div>
+      <div class="quote-text">„${q.text}“</div>
       <div class="quote-author">${q.author}</div>
       <div class="quote-source">Quelle: ${q.source}</div>
     </div>
   `;
 }
 
-// Normalise & Match-Funktionen
-function normalize(str) {
-  return str
-    .toLowerCase()
-    .replace(/[`´'']/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function matchNumericPattern(chunk) {
-  const t = normalize(chunk);
-  const regex = /(\d+)\s*(li|re|k|p)/g;
-  let matches = [];
-  let m;
-  while ((m = regex.exec(t)) !== null) {
-    const count = m[1];
-    const code  = m[2];
-
-    let entry;
-    if (code === "li" || code === "p") {
-      entry = dict.find(e => e.deLong === "linke Masche");
-    } else {
-      entry = dict.find(e => e.deLong === "rechte Masche");
-    }
-    if (!entry) continue;
-
-    matches.push({ count, entry, code });
-  }
-  return matches.length ? matches : null;
-}
-
-function matchChunkDirect(chunk) {
-  const t = normalize(chunk);
-
-  for (const e of dict) {
-    if (
-      t.includes(normalize(e.deShort)) || t.includes(normalize(e.deLong)) ||
-      t.includes(normalize(e.enShort)) || t.includes(normalize(e.enLong)) ||
-      t.includes(normalize(e.frShort)) || t.includes(normalize(e.frLong))
-    ) {
-      return e;
-    }
-  }
-  return null;
-}
-
-function detectLangHint(chunk) {
-  const t = normalize(chunk);
-  if (/[àâçéèêëîïôùûüÿœ]/.test(t)) return "fr";
-  if (t.match(/\b(k|p|yo|ssk|k2tog|p2tog|co|bo)\b/)) return "en";
-  if (/[äöüß]/.test(t)) return "de";
-  return "unknown";
-}
-
-// Verlauf (localStorage)
+// Verlauf in localStorage
 const HISTORY_KEY = "strickUebersetzerHistoryV1";
-let historyEntries = [];
+let historyEntries = []; // {text, time}
 
+// aus localStorage laden
 function loadHistory() {
   try {
     const raw = localStorage.getItem(HISTORY_KEY);
-    historyEntries = raw ? JSON.parse(raw) : [];
+    if (!raw) {
+      historyEntries = [];
+      return;
+    }
+    const arr = JSON.parse(raw);
+    if (Array.isArray(arr)) {
+      historyEntries = arr;
+    } else {
+      historyEntries = [];
+    }
   } catch (e) {
     historyEntries = [];
   }
 }
 
+// in localStorage speichern
 function saveHistory() {
   try {
     localStorage.setItem(HISTORY_KEY, JSON.stringify(historyEntries));
   } catch (e) {
-    console.warn("Historie konnte nicht gespeichert werden");
+    // Ignorieren, wenn localStorage nicht verfügbar
   }
 }
 
@@ -741,13 +674,13 @@ function renderHistory() {
     li.innerHTML = `<span>#${historyEntries.length - idx}</span>${shortText}`;
     li.addEventListener("click", () => {
       document.getElementById('input').value = entry.text;
+      // aus Historie: keine neue Historie, kein neuer Zitat-Trigger
       doTranslate(false, false);
     });
     ul.appendChild(li);
   });
 }
 
-// Haupt-Übersetzungsfunktion
 function doTranslate(addHistory = true, triggerQuote = true) {
   const raw = document.getElementById('input').value;
   const mainLang = document.getElementById('mainLang').value;
@@ -763,9 +696,12 @@ function doTranslate(addHistory = true, triggerQuote = true) {
   }
 
   if (addHistory) addToHistory(raw);
-  logEvent("translate", { input: raw, mainLang: mainLang });
 
-  const chunks = cleaned.split(",").map(c => c.trim()).filter(Boolean);
+  const chunks = cleaned
+    .split(",")
+    .map(c => c.trim())
+    .filter(Boolean);
+
   let anyWarning = false;
 
   let deShort = [], deLong = [];
@@ -876,27 +812,16 @@ function doTranslate(addHistory = true, triggerQuote = true) {
 
   document.getElementById('output').innerHTML = html;
 
+  // Zitat nur bei echten neuen Übersetzungen triggen
   if (triggerQuote && shouldShowQuote()) {
     document.getElementById('quote').innerHTML = renderQuoteBlock();
   } else if (!triggerQuote) {
+    // aus Historie: kein neues Zitat
     document.getElementById('quote').innerHTML = "";
   }
-
-  saveSession();
 }
 
-// Zufällige Beispiele (nur EN/FR)
-function generateRandomExample() {
-  const langs = ["en", "fr"];
-  const lang = langs[Math.floor(Math.random() * langs.length)];
-  const example = examples[lang][Math.floor(Math.random() * examples[lang].length)];
-  
-  document.getElementById('input').value = example;
-  logEvent("random_example", { lang: lang, example: example });
-  doTranslate(true, true);
-}
-
-// Dark Mode
+// Dark Mode & Schriftgröße
 const bodyEl = document.body;
 
 function applyDarkMode(on) {
@@ -947,11 +872,11 @@ function applyFontSize(mode) {
   }
 }
 
-// Event-Listener
 document.getElementById('darkToggle').addEventListener('change', (e) => {
   applyDarkMode(e.target.checked);
 });
 
+// Schriftgrößen-Buttons (aktuell unsichtbar, aber funktionsfähig)
 const fontButtons = document.querySelectorAll(".font-btn");
 fontButtons.forEach(btn => {
   btn.addEventListener("click", () => {
@@ -961,6 +886,7 @@ fontButtons.forEach(btn => {
   });
 });
 
+// Tabelle ein-/ausklappen
 const tableToggle = document.getElementById("tableToggle");
 const tableContainer = document.getElementById("tableContainer");
 const tableToggleIcon = document.getElementById("tableToggleIcon");
@@ -976,38 +902,28 @@ tableToggle.addEventListener("click", () => {
   }
 });
 
-document.getElementById('btn').addEventListener('click', () => doTranslate(true, true));
-document.getElementById('btnExample').addEventListener('click', generateRandomExample);
-
-// Tech Support Link
-const techSupportLink = document.getElementById('techSupportLink');
-techSupportLink.addEventListener('click', (e) => {
-  e.preventDefault();
-  if (!currentSessionId) {
-    currentSessionId = generateSessionId();
-  }
-  saveSession();
-  const supportText = getTechSupportText();
-  window.location.href = `sms:+491701234567&body=${supportText}`;
-});
-
-// Initial
+// Initial Verlauf laden
 loadHistory();
 renderHistory();
 
-// Session-ID anzeigen (optional, für Debugging)
-function updateSessionDisplay() {
-  if (!currentSessionId) {
-    currentSessionId = generateSessionId();
-  }
-  const sessionEl = document.getElementById('sessionInfo');
-  sessionEl.textContent = `Session-ID: ${currentSessionId}`;
-  sessionEl.style.display = 'block';
-}
+// Button-Handler: echte neue Übersetzung -> Quote darf triggern
+document.getElementById('btn').addEventListener('click', () => doTranslate(true, true));
 
-// Beim Start Session-ID erzeugen
-currentSessionId = generateSessionId();
-updateSessionDisplay();
+/*
+Beispiel-Eingaben zum Testen:
+
+1) Deutsch:
+   Umschlag, 2 re zus., 3 li, 4 re
+
+2) Englisch:
+   yo, k2tog, p2, k4, to end
+
+3) Gemischt:
+   Anschlag, 10 re, 10 li, 1x1 rib, bind off
+
+4) Französisch:
+   jeté, 2 m. end. ens., 3 m.env., jusqu'à la fin
+*/
 </script>
 </body>
 </html>
