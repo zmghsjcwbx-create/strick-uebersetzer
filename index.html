@@ -165,34 +165,70 @@ function doTranslate() {
     .map(c => c.trim())
     .filter(Boolean);
 
-  let blocks = [];
   let anyWarning = false;
+
+  // Sammel-Listen pro Sprache
+  let deParts = [];
+  let enParts = [];
+  let frParts = [];
 
   for (const chunk of chunks) {
     const numericMatches = matchNumericPattern(chunk);
 
     if (numericMatches) {
-      // jeder "3 li" / "k2" Teil wird einzeln ausgegeben
       numericMatches.forEach(match => {
         const c = match.count;
         const b = match.base;
 
-        // Mehrzahlformen sehr einfach, nur im Deutschen sauber
         const deText = c + " " + (c === "1" ? b.de : b.de.replace("masche", "maschen"));
         const enText = (b.en === "knit" ? "k" : "p") + c;
         const frText = c + " " + (b.fr.startsWith("maille") && c !== "1"
           ? b.fr.replace("maille", "m.")
           : b.fr);
 
-        blocks.push(
-          "Eingabe-Teil: <strong>" + match.original + "</strong><br>" +
-          "→ Deutsch: "  + deText + "<br>" +
-          "→ English: "  + enText + "<br>" +
-          "→ Français: " + frText
-        );
+        deParts.push(deText);
+        enParts.push(enText);
+        frParts.push(frText);
       });
       continue;
     }
+
+    const entry = matchChunkDirect(chunk);
+    if (entry) {
+      const langInfo = detectLang(chunk, entry);
+      let expectedLang = "de";
+      if (chunk.match(/\b(k|p|yo|ssk|k2tog|p2tog|m1)\b/i)) expectedLang = "en";
+      if (/[àâçéèêëîïôùûüÿœ]/.test(chunk)) expectedLang = "fr";
+
+      if (langInfo.best !== expectedLang && expectedLang !== "de") {
+        anyWarning = true;
+      }
+
+      deParts.push(entry.de);
+      enParts.push(entry.en);
+      frParts.push(entry.fr);
+    } else {
+      anyWarning = true;
+      deParts.push("[unbekannt: " + chunk + "]");
+      enParts.push("[unknown: " + chunk + "]");
+      frParts.push("[inconnu: " + chunk + "]");
+    }
+  }
+
+  let header = "";
+  if (anyWarning) {
+    header = "<p style='color:red;'><strong>Hinweis: Übersetzungsfehler oder Ungenauigkeiten möglich. Bitte Eingabe prüfen.</strong></p>";
+  }
+
+  const html =
+    header +
+    "<h3>Deutsch</h3><p>"   + (deParts.join(", ") || "-") + "</p>" +
+    "<h3>English</h3><p>"   + (enParts.join(", ") || "-") + "</p>" +
+    "<h3>Français</h3><p>"  + (frParts.join(", ") || "-") + "</p>";
+
+  document.getElementById('output').innerHTML = html;
+}
+
 
     // kein numerisches Muster → Dictionary-Match
     const entry = matchChunkDirect(chunk);
