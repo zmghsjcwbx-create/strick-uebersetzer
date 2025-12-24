@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="de">
-<head><title>Kerstins Strick-Dolmetscher</title></head>
+<head>
+  <meta charset="UTF-8">
+  <title>Kerstins Strick-Übersetzer</title>
+</head>
 <body>
 <h1>Frohe Weihnachten 2025 – Dein Strick-Übersetzer: DE ↔ EN ↔ FR</h1>
 
-<!-- Eingabe -->
 <p><strong>Eingabe:</strong></p>
-<textarea id="input" rows="3" cols="60"
-  placeholder="z.B.: p1, k1 to end oder 1 li, 1 re bis Ende"></textarea><br>
+<textarea id="input" rows="3" cols="80"
+  placeholder="z.B.: Umschlag, 2 re zus., 3 li, 4 re oder p1, k1 to end"></textarea><br>
 <button id="btn">Übersetzen</button>
 
-<!-- Ausgabe -->
 <p><strong>Ausgabe:</strong></p>
 <div id="output" style="border:1px solid #ccc;padding:8px;min-height:40px;"></div>
 
 <hr>
 
-<!-- Übersetzungstabelle immer sichtbar -->
 <h2>Übersicht: Begriffe Deutsch / Englisch / Französisch</h2>
 <table border="1" style="border-collapse:collapse;font-family:Arial;">
 <tr><th>Deutsch</th><th>Englisch (US/UK)</th><th>Französisch</th><th>Bedeutung</th></tr>
@@ -31,7 +31,7 @@
 <tr><td>Anschlag</td><td>cast on</td><td>monter</td><td>Maschen anschlagen</td></tr>
 <tr><td>Abketten</td><td>bind off</td><td>rabattre</td><td>Maschen abketten</td></tr>
 </table>
-  
+
 <script>
 // Wörterbuch für Einzelbegriffe / feste Phrasen
 const dict = [
@@ -74,7 +74,7 @@ function coreDe(entry) {
   return (parts[0] || "") + (parts[1] ? " " + parts[1] : "");
 }
 
-// Sprache des Chunks grob erkennen (für Warnungen)
+// Sprache grob erkennen (für Warnungen)
 function detectLang(chunk, entry) {
   const t = normalize(chunk);
   let scores = { de: 0, en: 0, fr: 0 };
@@ -102,14 +102,13 @@ function detectLang(chunk, entry) {
 function matchNumericPattern(chunk) {
   const t = normalize(chunk);
 
-  // Beispiele, die erkannt werden:
-  //  "3 li", "4 re", "k2", "p3", "3 p", "4 k"
+  // erkennt z.B. "3 li", "4 re", "k2", "p3"
   const regex = /(\d+)\s*(li|re|k|p)/g;
   let matches = [];
   let m;
   while ((m = regex.exec(t)) !== null) {
     const count = m[1];
-    const code  = m[2]; // li, re, k, p
+    const code  = m[2];
     let base;
 
     if (code === "li" || code === "p") {
@@ -130,7 +129,7 @@ function matchNumericPattern(chunk) {
 function matchChunkDirect(chunk) {
   const t = normalize(chunk);
 
-  // 1. direkter Treffer in Wörterbuch
+  // 1. direkter Treffer
   for (const entry of dict) {
     if (
       t.includes(normalize(entry.de)) ||
@@ -229,47 +228,7 @@ function doTranslate() {
   document.getElementById('output').innerHTML = html;
 }
 
-
-    // kein numerisches Muster → Dictionary-Match
-    const entry = matchChunkDirect(chunk);
-    if (entry) {
-      const langInfo = detectLang(chunk, entry);
-      let expectedLang = "de";
-      if (chunk.match(/\b(k|p|yo|ssk|k2tog|p2tog|m1)\b/i)) expectedLang = "en";
-      if (/[àâçéèêëîïôùûüÿœ]/.test(chunk)) expectedLang = "fr";
-
-      let warning = "";
-      if (langInfo.best !== expectedLang && expectedLang !== "de") {
-        warning = "<strong>Hinweis: Spracheingabe und erkannte Sprache passen nicht eindeutig zusammen – Übersetzungsfehler möglich.</strong><br>";
-        anyWarning = true;
-      }
-
-      blocks.push(
-        warning +
-        "Eingabe-Teil: <strong>" + chunk + "</strong><br>" +
-        "→ Deutsch: "   + entry.de + "<br>" +
-        "→ English: "   + entry.en + "<br>" +
-        "→ Français: "  + entry.fr
-      );
-    } else {
-      blocks.push(
-        "<strong>Keine eindeutige Zuordnung für:</strong> " + chunk +
-        "<br>→ Bitte ggf. kürzer oder genauer eingeben."
-      );
-      anyWarning = true;
-    }
-  }
-
-  let header = "";
-  if (anyWarning) {
-    header = "<p style='color:red;'><strong>Hinweis: Übersetzungsfehler oder Ungenauigkeiten möglich. Bitte Eingabe prüfen.</strong></p>";
-  }
-
-  document.getElementById('output').innerHTML = header + blocks.join("<hr>");
-}
-
 document.getElementById('btn').addEventListener('click', doTranslate);
 </script>
-
 </body>
 </html>
