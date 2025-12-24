@@ -31,6 +31,7 @@
       background: var(--bg);
       color: var(--text-main);
       font-size: 100%;
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
     .page {
@@ -66,6 +67,7 @@
       border: 1px solid var(--border);
       box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
       margin-bottom: 18px;
+      transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     label {
@@ -85,6 +87,9 @@
       font-size: 0.95rem;
       resize: vertical;
       min-height: 110px;
+      background: #ffffff;
+      color: var(--text-main);
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     }
 
     textarea::placeholder {
@@ -116,10 +121,15 @@
       font-weight: 600;
       cursor: pointer;
       white-space: nowrap;
+      transition: background 0.2s ease, transform 0.05s ease;
     }
 
     button:hover {
       background: #2746c9;
+    }
+
+    button:active {
+      transform: scale(0.98);
     }
 
     .controls-inline {
@@ -160,6 +170,7 @@
       padding: 10px 12px 12px;
       min-height: 40px;
       font-size: 0.93rem;
+      transition: background 0.2s ease, border-color 0.2s ease;
     }
 
     .warning {
@@ -202,6 +213,7 @@
       border: 1px solid var(--border);
       padding: 4px 6px;
       vertical-align: top;
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     }
 
     th {
@@ -229,6 +241,52 @@
       padding: 3px 8px;
       border-radius: 999px;
       border: 1px solid rgba(148,163,184,0.4);
+    }
+
+    .font-buttons {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .font-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 2px 8px;
+      background: rgba(255,255,255,0.9);
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .font-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    /* Zitatbox */
+    .quote-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #eef2ff;
+      border: 1px solid #d1d5ff;
+      font-size: 0.95rem;
+      color: #111827;
+    }
+
+    .quote-text {
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .quote-author {
+      margin-top: 6px;
+      font-weight: 600;
+    }
+
+    .quote-source {
+      font-size: 0.8rem;
+      color: #4b5563;
     }
 
     @media (max-width: 640px) {
@@ -264,14 +322,14 @@
       <input type="checkbox" id="darkToggle">
       Dark&nbsp;Mode
     </label>
-    <label class="top-toggle-label">
+    <div class="top-toggle-label">
       Schrift:
-      <select id="fontSizeToggle">
-        <option value="normal">Normal</option>
-        <option value="large">Groß</option>
-        <option value="xlarge">Sehr groß</option>
-      </select>
-    </label>
+      <div class="font-buttons">
+        <button type="button" class="font-btn active" data-size="normal">Normal</button>
+        <button type="button" class="font-btn" data-size="large">Groß</button>
+        <button type="button" class="font-btn" data-size="xlarge">Sehr groß</button>
+      </div>
+    </div>
   </div>
 
   <header>
@@ -309,6 +367,7 @@
     </p>
 
     <div id="output" class="output"></div>
+    <div id="quote" class="quote-container"></div>
   </div>
 
   <div class="card">
@@ -486,18 +545,10 @@ function shouldShowQuote() {
 function renderQuoteBlock() {
   const q = quotes[Math.floor(Math.random() * quotes.length)];
   return `
-    <div style="
-      margin-bottom:10px;
-      padding:8px 10px;
-      border-radius:10px;
-      background:#eef2ff;
-      border:1px solid #d1d5ff;
-      font-size:0.85rem;
-      color:#374151;
-    ">
-      <div style="font-style:italic;">„${q.text}“</div>
-      <div style="margin-top:4px;font-weight:600;">${q.author}</div>
-      <div style="font-size:0.75rem;color:#6b7280;">Quelle: ${q.source}</div>
+    <div class="quote-box">
+      <div class="quote-text">„${q.text}“</div>
+      <div class="quote-author">${q.author}</div>
+      <div class="quote-source">Quelle: ${q.source}</div>
     </div>
   `;
 }
@@ -512,6 +563,7 @@ function doTranslate() {
   if (!cleaned) {
     document.getElementById('output').innerHTML =
       "Bitte eine Strickanweisung eingeben (Deutsch, Englisch oder Französisch).";
+    document.getElementById('quote').innerHTML = "";
     return;
   }
 
@@ -589,9 +641,6 @@ function doTranslate() {
   if (anyWarning) {
     header += "<div class='warning'>Hinweis: Übersetzungsfehler oder Ungenauigkeiten möglich. Bitte Eingabe prüfen.</div>";
   }
-  if (shouldShowQuote()) {
-    header += renderQuoteBlock();
-  }
 
   function renderMainSection(label, lists) {
     const sLine = lists.short.length ? lists.short.join(", ") : "-";
@@ -632,6 +681,13 @@ function doTranslate() {
     secondaryHtml;
 
   document.getElementById('output').innerHTML = html;
+
+  // Zitat unten separat anzeigen
+  if (shouldShowQuote()) {
+    document.getElementById('quote').innerHTML = renderQuoteBlock();
+  } else {
+    document.getElementById('quote').innerHTML = "";
+  }
 }
 
 // Dark Mode & Schriftgröße
@@ -639,12 +695,18 @@ const bodyEl = document.body;
 
 function applyDarkMode(on) {
   if (on) {
-    bodyEl.style.background = "#0f172a";
-    document.documentElement.style.setProperty("--card-bg", "#111827");
     document.documentElement.style.setProperty("--bg", "#0f172a");
+    document.documentElement.style.setProperty("--card-bg", "#111827");
     document.documentElement.style.setProperty("--text-main", "#e5e7eb");
     document.documentElement.style.setProperty("--text-muted", "#9ca3af");
     document.documentElement.style.setProperty("--border", "#1f2937");
+    bodyEl.style.background = "var(--bg)";
+    const textareas = document.querySelectorAll("textarea");
+    textareas.forEach(t => {
+      t.style.background = "#020617";
+      t.style.color = "#e5e7eb";
+      t.style.borderColor = "#1f2937";
+    });
   } else {
     document.documentElement.style.setProperty("--bg", "#f5f7fb");
     document.documentElement.style.setProperty("--card-bg", "#ffffff");
@@ -652,6 +714,12 @@ function applyDarkMode(on) {
     document.documentElement.style.setProperty("--text-muted", "#6b7280");
     document.documentElement.style.setProperty("--border", "#e5e7eb");
     bodyEl.style.background = "var(--bg)";
+    const textareas = document.querySelectorAll("textarea");
+    textareas.forEach(t => {
+      t.style.background = "#ffffff";
+      t.style.color = "#111827";
+      t.style.borderColor = "var(--border)";
+    });
   }
 }
 
@@ -669,8 +737,14 @@ document.getElementById('darkToggle').addEventListener('change', (e) => {
   applyDarkMode(e.target.checked);
 });
 
-document.getElementById('fontSizeToggle').addEventListener('change', (e) => {
-  applyFontSize(e.target.value);
+// Schriftgrößen-Buttons
+const fontButtons = document.querySelectorAll(".font-btn");
+fontButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    fontButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    applyFontSize(btn.getAttribute("data-size"));
+  });
 });
 
 // Button-Handler
