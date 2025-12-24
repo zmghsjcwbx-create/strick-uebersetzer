@@ -2,927 +2,303 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Dein Strick-Übersetzer – DE · EN · FR</title>
-
-  <!-- Favicon: Datei favicon.png ins Repo legen -->
+  <title>🔧 PLACEHOLDER_BROWSER_TITLE_HIER_EINSETZEN</title>
   <link rel="icon" type="image/png" href="favicon.png">
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <style>
     :root {
-      --bg: #f5f7fb;
-      --card-bg: #ffffff;
-      --accent: #3662ff;
-      --accent-soft: #e2e8ff;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --border: #e5e7eb;
-      --danger: #b91c1c;
-      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --table-head-bg: #eff1ff;
-      --quote-bg: #eef2ff;
-      --quote-border: #d1d5ff;
-      --output-bg: #f9fafb;
+      --bg: #f8fafc; --card-bg: #ffffff; --accent: #3b82f6; --text: #1e293b;
+      --error-bg: #fef2f2; --error-text: #dc2626; --warning-bg: #fef3c7; --warning-text: #d97706;
+      --border: #e2e8f0; --text-muted: #64748b; --output-bg: #f0f9ff;
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--text-main);
-      font-size: 100%;
-      transition: background 0.2s ease, color 0.2s ease;
+    [data-theme="dark"] { 
+      --bg: #0f172a; --card-bg: #1e293b; --accent: #60a5fa; --text: #f1f5f9; 
+      --border: #334155; --text-muted: #94a3b8; --error-bg: #451a03; --error-text: #f87171; 
+      --warning-bg: #422006; --warning-text: #facc15; --output-bg: #1e40af20;
     }
-
-    .page {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 60px 14px 36px; /* Platz für fixe Topbar */
-      position: relative;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 20px; max-width: 1000px; margin: 0 auto; }
+    
+    .top-bar { position: fixed; top: 0; left: 0; right: 0; background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 12px 20px; z-index: 100; display: flex; justify-content: flex-end; gap: 16px; }
+    .toggle-group { display: flex; gap: 12px; align-items: center; font-size: 0.9rem; }
+    .font-btn { padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px; background: none; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+    .font-btn.active, .font-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
+    
+    .card { background: var(--card-bg); border-radius: 16px; padding: 28px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+    
+    /* PROMINENTE AUSGABE */
+    .output-card { 
+      min-height: 350px; padding: 40px !important; margin: 32px 0 !important; 
+      background: linear-gradient(135deg, var(--output-bg) 0%, rgba(59,130,246,0.08) 100%) !important; 
+      border: 3px solid var(--accent) !important; box-shadow: 0 12px 40px rgba(59,130,246,0.2) !important;
+      border-radius: 24px !important; position: relative;
     }
-
-    header {
-      margin-bottom: 20px;
+    [data-theme="dark"] .output-card { background: linear-gradient(135deg, var(--output-bg) 0%, rgba(30,64,175,0.3) 100%) !important; }
+    .output-card::before {
+      content: '🎯 ÜBERSETZUNGSERGEBNIS'; position: absolute; top: 20px; right: 28px; 
+      background: var(--accent); color: white; padding: 10px 24px; border-radius: 25px;
+      font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; box-shadow: 0 4px 12px rgba(59,130,246,0.4);
     }
-
-    h1 {
-      margin: 0;
-      font-size: 1.9rem;
-      text-align: center;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    
+    /* OUTPUT SECTIONS */
+    .output-section { margin: 32px 0; padding: 28px; background: rgba(255,255,255,0.9); border-radius: 20px; border-left: 8px solid; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    [data-theme="dark"] .output-section { background: rgba(255,255,255,0.15); }
+    .output-section.de { border-left-color: #10b981; }
+    .output-section.en { border-left-color: #f59e0b; }
+    .output-section.fr { border-left-color: #8b5cf6; }
+    .output-section.warning { border-left-color: var(--warning-text); background: var(--warning-bg) !important; }
+    .output-section.error { border-left-color: var(--error-text); background: var(--error-bg) !important; }
+    
+    .output-title { font-size: 1.8rem; font-weight: 900; margin-bottom: 20px; color: var(--text); display: flex; align-items: center; gap: 16px; }
+    .output-line { 
+      font-size: 1.5rem !important; font-family: 'SF Mono', Menlo, Consolas, monospace; font-weight: 700; 
+      line-height: 1.6; margin: 16px 0; padding: 20px 24px; 
+      background: rgba(255,255,255,0.95); border-radius: 16px; border-left: 6px solid var(--accent);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
-
-    .subtitle {
-      margin-top: 6px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 18px;
-      padding: 18px 18px 20px;
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-      margin-bottom: 18px;
-      transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: block;
-      margin-bottom: 6px;
-      color: var(--text-muted);
-    }
-
-    textarea {
-      width: 100%;
-      border-radius: 12px;
-      padding: 12px 14px;
-      border: 1px solid var(--border);
-      font-family: Menlo, "SF Mono", Consolas, monospace;
-      font-size: 0.95rem;
-      resize: vertical;
-      min-height: 110px;
-      background: #ffffff;
-      color: var(--text-main);
-      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-    }
-
-    textarea::placeholder {
-      color: #9ca3af;
-    }
-
-    textarea:focus, select:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-soft);
-    }
-
-    .top-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      margin-top: 10px;
-      justify-content: space-between;
-    }
-
-    button {
-      background: var(--accent);
-      color: #ffffff;
-      border: none;
-      border-radius: 999px;
-      padding: 9px 24px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s ease, transform 0.05s ease, box-shadow 0.1s ease;
-      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
-    }
-
-    button:hover {
-      background: #2746c9;
-      box-shadow: 0 5px 14px rgba(37, 99, 235, 0.45);
-    }
-
-    button:active {
-      transform: scale(0.98);
-      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-    }
-
-    .controls-inline {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px 16px;
-      align-items: center;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    select {
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: #fff;
-      font-size: 0.85rem;
-    }
-
-    .checkbox-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-
-    .hint {
-      margin-top: 10px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .output {
-      margin-top: 14px;
-      border-radius: 16px;
-      border: 2px solid var(--accent);
-      background: var(--output-bg);
-      padding: 14px 14px 16px;
-      min-height: 52px;
-      font-size: 1.05rem;
-      line-height: 1.6;
-      font-weight: 500;
-      transition: background 0.2s ease, border-color 0.2s ease;
-    }
-
-    .warning {
-      color: var(--danger);
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 8px;
-    }
-
-    .section-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin: 6px 0 4px;
-    }
-
-    .secondary-row {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-top: 8px;
-    }
-
-    .secondary-label {
-      font-weight: 600;
-      margin-right: 4px;
-    }
-
-    h2 {
-      font-size: 1rem;
-      margin: 0 0 8px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-    }
-
-    th, td {
-      border: 1px solid var(--border);
-      padding: 4px 6px;
-      vertical-align: top;
-      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-    }
-
-    th {
-      background: var(--table-head-bg);
-      font-weight: 600;
-    }
-
-    .top-bar-toggles {
-      position: fixed;
-      right: 14px;
-      top: 8px;
-      z-index: 20;
-      display: flex;
-      gap: 10px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      align-items: center;
-      background: rgba(255,255,255,0.85);
-      border-radius: 999px;
-      padding: 4px 8px;
-      border: 1px solid rgba(148,163,184,0.4);
-      backdrop-filter: blur(10px);
-    }
-
-    .top-toggle-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      cursor: pointer;
-    }
-
-    /* Schriftgrößen-Buttons vorerst unsichtbar lassen */
-    .font-buttons-wrapper {
-      display: none;
-    }
-
-    /* Zitatbox */
-    .quote-box {
-      margin-top: 16px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      background: var(--quote-bg);
-      border: 1px solid var(--quote-border);
-      font-size: 0.98rem;
-      color: var(--text-main);
-    }
-
-    .quote-text {
-      font-style: italic;
-      font-size: 1.02rem;
-    }
-
-    .quote-author {
-      margin-top: 6px;
-      font-weight: 600;
-    }
-
-    .quote-source {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    /* Verlauf */
-    .history-list {
-      list-style: none;
-      padding-left: 0;
-      margin: 6px 0 0;
-      font-size: 0.85rem;
-    }
-
-    .history-item {
-      padding: 4px 0;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      color: #2563eb;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-
-    .history-item:last-child {
-      border-bottom: none;
-    }
-
-    .history-item span {
-      color: var(--text-muted);
-      margin-right: 4px;
-      font-size: 0.8rem;
-    }
-
-    .history-empty {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin: 0;
-    }
-
-    /* Tabelle einklappbar */
-    .table-toggle {
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
-      color: #2563eb;
-    }
-
-    .table-toggle-icon {
-      font-size: 0.9rem;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    @media (max-width: 640px) {
-      .card {
-        padding: 16px 14px 18px;
-        border-radius: 14px;
-      }
-      h1 {
-        font-size: 1.6rem;
-      }
-      .top-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      button {
-        width: 100%;
-        text-align: center;
-      }
-      .page {
-        padding-top: 72px;
-      }
-      .top-bar-toggles {
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-      }
+    [data-theme="dark"] .output-line { background: rgba(255,255,255,0.25); }
+    
+    .unknown-term { background: #fee2e2 !important; color: #dc2626 !important; border-radius: 8px; padding: 6px 12px; font-weight: 800; border: 2px solid #fecaca; }
+    .suggestion { background: #dbeafe; color: #1e40af; padding: 8px 16px; border-radius: 10px; font-size: 1.1rem; margin-left: 20px; font-weight: 600; }
+    
+    textarea { width: 100%; min-height: 160px; border-radius: 16px; padding: 24px; border: 2px solid var(--border); font-family: inherit; font-size: 1.15rem; resize: vertical; transition: all 0.3s; line-height: 1.6; }
+    textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(59,130,246,0.2); }
+    .btn-group { display: flex; gap: 20px; flex-wrap: wrap; margin: 28px 0; }
+    button { background: var(--accent); color: white; border: none; padding: 18px 36px; border-radius: 16px; font-size: 1.15rem; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 6px 20px rgba(59,130,246,0.4); min-height: 56px; }
+    button:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(59,130,246,0.5); }
+    
+    h1 { font-size: 2.8rem; font-weight: 900; margin-bottom: 16px; background: linear-gradient(135deg, var(--accent), #1d4ed8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    h3 { font-size: 1.5rem; margin-bottom: 24px; color: var(--text); font-weight: 800; }
+    .quote { background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(16,185,129,0.1)); border-left: 6px solid var(--accent); padding: 24px; border-radius: 16px; font-style: italic; font-size: 1.2rem; margin: 24px 0; }
+    .hidden { display: none; }
+    
+    @media (max-width: 768px) { 
+      body { padding: 16px; } .top-bar { padding: 12px 16px; flex-direction: column; gap: 12px; }
+      .output-title { font-size: 1.5rem; } .output-line { font-size: 1.3rem !important; }
+      h1 { font-size: 2.2rem; } button { padding: 16px 28px; font-size: 1.05rem; }
     }
   </style>
 </head>
 <body>
-<div class="top-bar-toggles">
-  <label class="top-toggle-label">
-    <input type="checkbox" id="darkToggle">
-    Dark&nbsp;Mode
-  </label>
-  <div class="top-toggle-label font-buttons-wrapper">
-    Schrift:
-    <div class="font-buttons">
-      <button type="button" class="font-btn active" data-size="normal">Normal</button>
-      <button type="button" class="font-btn" data-size="large">Groß</button>
-      <button type="button" class="font-btn" data-size="xlarge">Sehr groß</button>
+  <div class="top-bar">
+    <div class="toggle-group">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600">
+        <input type="checkbox" id="darkToggle"> 🌙 Dark Mode
+      </label>
     </div>
   </div>
-</div>
-
-<div class="page">
-  <header>
-    <h1>Dein Strick-Übersetzer</h1>
-    <p class="subtitle">Deutsch · Englisch · Französisch – klar und übersichtlich, auch für Handy &amp; Tablet.</p>
-  </header>
-
+  
+  <div style="height: 85px;"></div>
+  
   <div class="card">
-    <label for="input">Eingabe</label>
-    <textarea id="input"
-      placeholder="Schreibe hier deine Strickanweisung, z.B.:  Umschlag, 2 re zus., 3 li, 4 re"></textarea>
-
-    <div class="top-row">
-      <button id="btn">Übersetzen</button>
-
-      <div class="controls-inline">
-        <div>
-          Hauptausgabe:
-          <select id="mainLang">
-            <option value="de">Deutsch</option>
-            <option value="en">English</option>
-            <option value="fr">Français</option>
-          </select>
-        </div>
-
-        <label class="checkbox-label">
-          <input type="checkbox" id="showOthers" checked>
-          Andere Sprachen kurz anzeigen
-        </label>
-      </div>
-    </div>
-
-    <p class="hint">
-      Die Hauptsprache zeigt zuerst alle Kurzformen (Abkürzungen), danach die Langformen – jeweils kommagetrennt.
+    <h1>🧶 Kerstins Strickübersetzer</h1>
+    <p style="font-size:1.2rem;color:var(--text-muted);margin-bottom:28px;line-height:1.7">
+      DE ↔ EN ↔ FR • Kommas/Punkte/Semikolons trennen automatisch • Fehler werden farbig markiert
     </p>
-
-    <div id="output" class="output"></div>
-    <div id="quote" class="quote-container"></div>
-  </div>
-
-  <div class="card">
-    <h2 style="margin-bottom:4px;">Verlauf der letzten Eingaben</h2>
-    <p class="hint" style="margin-top:0;">Klicke auf eine Zeile, um die Eingabe erneut zu laden.</p>
-    <ul id="history" class="history-list"></ul>
-  </div>
-
-  <div class="card">
-    <div class="table-toggle" id="tableToggle">
-      <span class="table-toggle-icon" id="tableToggleIcon">▶</span>
-      <span>Begriffstabelle anzeigen / ausblenden</span>
-    </div>
-
-    <div id="tableContainer" class="hidden">
-      <h2>Übersicht: Begriffe Deutsch / Englisch / Französisch</h2>
-      <table>
-        <tr><th>Deutsch</th><th>Englisch (US/UK)</th><th>Französisch</th><th>Hinweis</th></tr>
-        <tr><td>rechte Masche (re)</td><td>knit (k)</td><td>maille endroit (m.end.)</td><td>Grundmasche rechts</td></tr>
-        <tr><td>linke Masche (li)</td><td>purl (p)</td><td>maille envers (m.env.)</td><td>Grundmasche links</td></tr>
-        <tr><td>Umschlag (U)</td><td>yarn over (yo)</td><td>jeté</td><td>Loch / Zunahme über Fadenumschlag</td></tr>
-        <tr><td>2 zus. re</td><td>k2tog</td><td>2 m. end. ens.</td><td>2 Maschen rechts zusammenstricken</td></tr>
-        <tr><td>2 zus. li</td><td>p2tog</td><td>2 m. env. ens.</td><td>2 Maschen links zusammenstricken</td></tr>
-        <tr><td>Überzug re</td><td>ssk</td><td>surjet simple</td><td>schräge Abnahme nach links</td></tr>
-        <tr><td>Anschlag</td><td>cast on (CO)</td><td>monter</td><td>Maschen neu anschlagen</td></tr>
-        <tr><td>Abketten</td><td>bind off (BO)</td><td>rabattre</td><td>Maschen elastisch beenden</td></tr>
-        <tr><td>bis Ende</td><td>to end</td><td>jusqu'à la fin</td><td>bis zum Reihenende fortsetzen</td></tr>
-        <tr><td>Rippenmuster 1x1</td><td>1x1 rib</td><td>côtes 1x1</td><td>abwechselnd 1 re, 1 li</td></tr>
-        <tr><td>Rippenmuster 2x2</td><td>2x2 rib</td><td>côtes 2x2</td><td>2 re, 2 li im Wechsel</td></tr>
-        <tr><td>kraus rechts</td><td>garter stitch</td><td>point mousse</td><td>in allen Reihen rechts</td></tr>
-        <tr><td>glatt rechts</td><td>stocking stitch</td><td>jersey endroit</td><td>Vorderseite rechts, Rückseite links</td></tr>
-        <tr><td>Perlmuster</td><td>moss stitch</td><td>point de riz</td><td>abwechselnd re/li, versetzt in der Höhe</td></tr>
-      </table>
+    
+    <textarea id="input" placeholder="✨ Teste mit: Umschlag, 2 re zus., 3 li, k2t0g, xxx, yo, re, li"></textarea>
+    
+    <div class="btn-group">
+      <button id="btn">🚀 Übersetzen</button>
+      <button id="randomExample">🎲 Zufälliges Beispiel (5-7 Schritte EN/FR)</button>
+      <button id="clear">🗑️ Leeren</button>
     </div>
   </div>
 
-  <div class="card">
-    <h2>Tech‑Support</h2>
-    <p style="margin-top:4px;font-size:0.9rem;color:#6b7280;">
-      Brauchst du Hilfe?
-      <a href="sms:+491701234567&body=Hallo%20Tobi,%20ich%20brauche%20Hilfe%20beim%20Strick-%C3%9Cbersetzer."
-         style="color:#2563eb;text-decoration:none;">
-        Tech‑Support per Nachricht öffnen
-      </a>
-    </p>
-  </div>
-</div>
+  <div id="quote" class="quote hidden"></div>
 
-<script>
-// Wörterbuch mit Kurz- und Langform
-const dict = [
-  { deShort: "re", deLong: "rechte Masche",
-    enShort: "k",  enLong: "knit",
-    frShort: "m.end.", frLong: "maille endroit" },
-
-  { deShort: "li", deLong: "linke Masche",
-    enShort: "p",  enLong: "purl",
-    frShort: "m.env.", frLong: "maille envers" },
-
-  { deShort: "umschlag", deLong: "Umschlag",
-    enShort: "yo",       enLong: "yarn over",
-    frShort: "jeté",     frLong: "jeté" },
-
-  { deShort: "2 zus. re", deLong: "2 zusammen rechts",
-    enShort: "k2tog",     enLong: "knit 2 together",
-    frShort: "2 m. end. ens.", frLong: "2 mailles ensemble à l'endroit" },
-
-  { deShort: "2 zus. li", deLong: "2 zusammen links",
-    enShort: "p2tog",     enLong: "purl 2 together",
-    frShort: "2 m. env. ens.", frLong: "2 mailles ensemble à l'envers" },
-
-  { deShort: "überzug re", deLong: "Überzug rechts",
-    enShort: "ssk",       enLong: "slip, slip, knit",
-    frShort: "surjet",    frLong: "surjet simple à l'endroit" },
-
-  { deShort: "anschlag",  deLong: "Maschen anschlagen",
-    enShort: "CO",        enLong: "cast on",
-    frShort: "monter",    frLong: "monter les mailles" },
-
-  { deShort: "abketten",  deLong: "Maschen abketten",
-    enShort: "BO",        enLong: "bind off",
-    frShort: "rabattre",  frLong: "rabattre les mailles" },
-
-  { deShort: "bis ende",  deLong: "bis Reihenende",
-    enShort: "to end",    enLong: "to the end of row",
-    frShort: "jusqu'à la fin", frLong: "jusqu'à la fin du rang" },
-
-  { deShort: "rippen 1x1", deLong: "Rippenmuster 1x1",
-    enShort: "1x1 rib",   enLong: "1x1 rib",
-    frShort: "côtes 1x1", frLong: "côtes 1x1" },
-
-  { deShort: "rippen 2x2", deLong: "Rippenmuster 2x2",
-    enShort: "2x2 rib",   enLong: "2x2 rib",
-    frShort: "côtes 2x2", frLong: "côtes 2x2" }
-];
-
-function normalize(str) {
-  return str
-    .toLowerCase()
-    .replace(/[`´‘’]/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-// numerische Muster (3 li, k2 etc.)
-function matchNumericPattern(chunk) {
-  const t = normalize(chunk);
-  const regex = /(\d+)\s*(li|re|k|p)/g;
-  let matches = [];
-  let m;
-  while ((m = regex.exec(t)) !== null) {
-    const count = m[1];
-    const code  = m[2];
-
-    let entry;
-    if (code === "li" || code === "p") {
-      entry = dict.find(e => e.deLong === "linke Masche");
-    } else {
-      entry = dict.find(e => e.deLong === "rechte Masche");
-    }
-    if (!entry) continue;
-
-    matches.push({ count, entry, code });
-  }
-  return matches.length ? matches : null;
-}
-
-// generelles Dictionary-Match
-function matchChunkDirect(chunk) {
-  const t = normalize(chunk);
-
-  for (const e of dict) {
-    if (
-      t.includes(normalize(e.deShort)) || t.includes(normalize(e.deLong)) ||
-      t.includes(normalize(e.enShort)) || t.includes(normalize(e.enLong)) ||
-      t.includes(normalize(e.frShort)) || t.includes(normalize(e.frLong))
-    ) {
-      return e;
-    }
-  }
-  return null;
-}
-
-function detectLangHint(chunk) {
-  const t = normalize(chunk);
-  if (/[àâçéèêëîïôùûüÿœ]/.test(t)) return "fr";
-  if (t.match(/\b(k|p|yo|ssk|k2tog|p2tog|co|bo)\b/)) return "en";
-  if (/[äöüß]/.test(t)) return "de";
-  return "unknown";
-}
-
-// Zitate-Logik
-const quotes = [
-  {
-    text: "In der Beschränkung zeigt sich der Meister.",
-    author: "Johann Wolfgang von Goethe",
-    source: "Wilhelm Meisters Lehrjahre"
-  },
-  {
-    text: "Geduld ist die schwere Kunst, das Tempo der Dinge zu ertragen.",
-    author: "Theodor Fontane",
-    source: "Briefe"
-  },
-  {
-    text: "Es ist nicht genug zu wissen, man muß auch anwenden; es ist nicht genug zu wollen, man muß auch tun.",
-    author: "Johann Wolfgang von Goethe",
-    source: "Maximen und Reflexionen"
-  },
-  {
-    text: "Mit dem Kleinen fängt man an, um das Große zu vollenden.",
-    author: "Friedrich Schiller",
-    source: "Über naive und sentimentalische Dichtung"
-  },
-  {
-    text: "Auch aus Steinen, die einem in den Weg gelegt werden, kann man Schönes bauen.",
-    author: "Johann Wolfgang von Goethe",
-    source: "Sprüche in Prosa"
-  }
-];
-
-let usageTimestamps = [];
-
-function shouldShowQuote() {
-  const now = Date.now();
-  const fiveMin = 5 * 60 * 1000;
-  usageTimestamps = usageTimestamps.filter(ts => now - ts <= fiveMin);
-  usageTimestamps.push(now);
-  return usageTimestamps.length > 3;
-}
-
-function renderQuoteBlock() {
-  const q = quotes[Math.floor(Math.random() * quotes.length)];
-  return `
-    <div class="quote-box">
-      <div class="quote-text">„${q.text}“</div>
-      <div class="quote-author">${q.author}</div>
-      <div class="quote-source">Quelle: ${q.source}</div>
+  <div id="output" class="output-card">
+    <div style="text-align:center;color:var(--text-muted);font-size:1.2rem;font-style:italic;padding:60px 20px">
+      Gib Strickanweisungen ein und klicke ⬆️ "Übersetzen" 
     </div>
-  `;
-}
+  </div>
 
-// Verlauf in localStorage
-const HISTORY_KEY = "strickUebersetzerHistoryV1";
-let historyEntries = []; // {text, time}
+  <script>
+    // 40er ZITAT-DATENBANK
+    const quotes = [
+      "„Stricken ist wie Atmen – nur schöner.“ – Kerstin",
+      "„Jede Masche erzählt eine Geschichte.“",
+      "„Geduld ist der Faden, der alles zusammenhält.“",
+      "„Im Stricken findet die Seele Ruhe.“",
+      "„Masche für Masche wird Magie sichtbar.“",
+      "„Die beste Therapie: Nadeln und Wolle.“",
+      "„Stricken heilt, was Worte nicht können.“",
+      "„Jeder Umschlag birgt eine Überraschung.“",
+      "„Rechts, links, wieder rechts – das Leben.“",
+      "„Ein Schal wärmt mehr als nur den Hals.“",
+      "„Stricken verbindet Generationen.“ – Oma",
+      "„Die Nadel tanzt, das Garn singt.“",
+      "„Fehler? Das sind nur neue Möglichkeiten.“",
+      "„Stricken macht die Welt weicher.“",
+      "„Jede Masche ist ein kleiner Sieg.“",
+      "„Im Rhythmus der Nadeln findet man sich.“",
+      "„Wolle ist die beste Therapeutin.“",
+      "„Stricken ist Meditation mit Farben.“",
+      "„Ein Pullover voller Erinnerungen.“",
+      "„Die Kunst des Wartens – Stricken.“",
+      "„Maschen wie Perlen auf einer Kette.“",
+      "„Stricken schafft Ordnung im Chaos.“",
+      "„Jeder Faden trägt eine Geschichte.“",
+      "„Die Nadel ist mächtiger als das Schwert.“",
+      "„Stricken: Kunst, die wärmt.“",
+      "„Immer eine Masche voraus denken.“",
+      "„Wolle macht alles besser.“",
+      "„Stricken ist Liebe in Reihen.“",
+      "„Die Magie passiert zwischen den Nadeln.“",
+      "„Jede Abnahme macht Platz für Neues.“",
+      "„Stricken verbindet Herz und Hand.“",
+      "„Die beste Medizin kommt auf zwei Nadeln.“",
+      "„Masche für Masche zum perfekten Muster.“",
+      "„Stricken heilt die Seele.“",
+      "„Wolle: weich, warm, wunderbar.“",
+      "„Im Stricken steckt die Zeit still.“",
+      "„Nadelklick – und die Welt ist gut.“",
+      "„Stricken ist mein Lieblingszauber.“"
+    ];
 
-// aus localStorage laden
-function loadHistory() {
-  try {
-    const raw = localStorage.getItem(HISTORY_KEY);
-    if (!raw) {
-      historyEntries = [];
-      return;
+    // ERWEITERTE DICT
+    const dict = [
+      {de:"rechte masche|re",en:"knit|k",fr:"maille endroit|m.end.",suggest:["rechts stricken"]},
+      {de:"linke masche|li",en:"purl|p",fr:"maille envers|m.env.",suggest:["links stricken"]},
+      {de:"umschlag|u",en:"yarn over|yo",fr:"jeté",suggest:["fadenumschlag"]},
+      {de:"2 zusammen rechts",en:"k2tog",fr:"2 m. ens. à l'end.",suggest:["abnahme rechts"]},
+      {de:"2 zusammen links",en:"p2tog",fr:"2 m. ens. à l'env.",suggest:["abnahme links"]},
+      {de:"1 re 1 li bis ende",en:"k1 p1 rib",fr:"1 m.end. 1 m.env. jusqu'à la fin"},
+      {de:"verdopple|kfb",en:"knit front back|kfb",fr:"augmenter 1 m.",suggest:["zunahme"]},
+      {de:"masche aufnehmen|m1",en:"make 1|m1",fr:"augmenter 1 m.",suggest:["zunahme"]}
+    ];
+
+    let lastTranslationTime = 0;
+    let showedQuote = false;
+
+    function showRandomQuote() {
+      const quote = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById('quote').innerHTML = `<q>${quote}</q>`;
+      document.getElementById('quote').classList.remove('hidden');
+      showedQuote = true;
     }
-    const arr = JSON.parse(raw);
-    if (Array.isArray(arr)) {
-      historyEntries = arr;
-    } else {
-      historyEntries = [];
+
+    function normalize(text) {
+      return text.toLowerCase().replace(/[;:.]/g,',').replace(/,\s*,/g,',').replace(/[,\s]+/g,',').replace(/^,|,$/g,'').split(',').filter(Boolean);
     }
-  } catch (e) {
-    historyEntries = [];
-  }
-}
 
-// in localStorage speichern
-function saveHistory() {
-  try {
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(historyEntries));
-  } catch (e) {
-    // Ignorieren, wenn localStorage nicht verfügbar
-  }
-}
+    function detectLang(chunk) {
+      const deScore = (chunk.match(/(re|li|umschlag|zusa|zusammen)/gi)||[]).length;
+      const enScore = (chunk.match(/(k|p|yo|tog|knit|purl)/gi)||[]).length;
+      const frScore = (chunk.match(/(end|env|jeté|m\.)/gi)||[]).length;
+      return deScore > enScore && deScore > frScore ? 'de' : enScore > frScore ? 'en' : 'fr';
+    }
 
-function addToHistory(text) {
-  const trimmed = text.trim();
-  if (!trimmed) return;
-  historyEntries.unshift({ text: trimmed, time: Date.now() });
-  if (historyEntries.length > 100) historyEntries.pop();
-  saveHistory();
-  renderHistory();
-}
-
-function renderHistory() {
-  const ul = document.getElementById('history');
-  ul.innerHTML = "";
-  if (historyEntries.length === 0) {
-    ul.innerHTML = "<p class='history-empty'>Noch keine Einträge.</p>";
-    return;
-  }
-  historyEntries.forEach((entry, idx) => {
-    const li = document.createElement("li");
-    li.className = "history-item";
-    const shortText = entry.text.length > 80 ? entry.text.slice(0, 80) + " …" : entry.text;
-    li.innerHTML = `<span>#${historyEntries.length - idx}</span>${shortText}`;
-    li.addEventListener("click", () => {
-      document.getElementById('input').value = entry.text;
-      // aus Historie: keine neue Historie, kein neuer Zitat-Trigger
-      doTranslate(false, false);
-    });
-    ul.appendChild(li);
-  });
-}
-
-function doTranslate(addHistory = true, triggerQuote = true) {
-  const raw = document.getElementById('input').value;
-  const mainLang = document.getElementById('mainLang').value;
-  const showOthers = document.getElementById('showOthers').checked;
-
-  const cleaned = normalize(raw.replace(/[.;:]/g, ","));
-
-  if (!cleaned) {
-    document.getElementById('output').innerHTML =
-      "Bitte eine Strickanweisung eingeben (Deutsch, Englisch oder Französisch).";
-    document.getElementById('quote').innerHTML = "";
-    return;
-  }
-
-  if (addHistory) addToHistory(raw);
-
-  const chunks = cleaned
-    .split(",")
-    .map(c => c.trim())
-    .filter(Boolean);
-
-  let anyWarning = false;
-
-  let deShort = [], deLong = [];
-  let enShort = [], enLong = [];
-  let frShort = [], frLong = [];
-
-  for (const chunk of chunks) {
-    const numericMatches = matchNumericPattern(chunk);
-
-    if (numericMatches) {
-      numericMatches.forEach(m => {
-        const c = m.count;
-        const e = m.entry;
-
-        const deS = (e.deShort === "re" || e.deShort === "li")
-          ? c + " " + e.deShort
-          : e.deShort;
-        const deL = c + " " + (c === "1"
-          ? e.deLong
-          : e.deLong.replace("Masche", "Maschen"));
-
-        const baseCode = m.code === "li" || m.code === "p" ? "p" : "k";
-        const enS = baseCode + c;
-        const enL = c + " " + e.enLong;
-
-        const frS = c + " " + e.frShort;
-        const frL = c + " " + e.frLong;
-
-        deShort.push(deS);
-        deLong.push(deL);
-        enShort.push(enS);
-        enLong.push(enL);
-        frShort.push(frS);
-        frLong.push(frL);
+    function findMatches(chunks) {
+      const results = [], warnings = [], unknowns = [];
+      chunks.forEach(chunk => {
+        let found = false, bestMatch = null, confidence = 0;
+        for(let entry of dict) {
+          const deWords = entry.de.split('|'), enWords = entry.en.split('|'), frWords = entry.fr.split('|');
+          if(deWords.some(w=>chunk.includes(w)) || enWords.some(w=>chunk.includes(w)) || frWords.some(w=>chunk.includes(w))) {
+            const matchLang = detectLang(chunk);
+            if((matchLang==='de' && deWords.some(w=>chunk.includes(w))) || 
+               (matchLang==='en' && enWords.some(w=>chunk.includes(w))) || 
+               (matchLang==='fr' && frWords.some(w=>chunk.includes(w)))) {
+              bestMatch = entry; confidence = 0.95; found = true; break;
+            } else confidence = 0.65;
+          }
+        }
+        if(found && bestMatch) results.push({chunk, entry: bestMatch});
+        else if(confidence > 0.6) warnings.push({chunk, entry: bestMatch});
+        else unknowns.push(chunk);
       });
-      continue;
+      return {results, warnings, unknowns};
     }
 
-    const entry = matchChunkDirect(chunk);
-    if (entry) {
-      const hint = detectLangHint(chunk);
-      if (hint !== "unknown" && hint !== "de") anyWarning = true;
-
-      deShort.push(entry.deShort);
-      deLong.push(entry.deLong);
-      enShort.push(entry.enShort);
-      enLong.push(entry.enLong);
-      frShort.push(entry.frShort);
-      frLong.push(entry.frLong);
-    } else {
-      anyWarning = true;
-      deShort.push("[unbekannt: " + chunk + "]");
-      enShort.push("[unknown: " + chunk + "]");
-      frShort.push("[inconnu: " + chunk + "]");
+    function renderOutput({results, warnings, unknowns}) {
+      let html = '';
+      
+      // DETAILLIERTE FEHLER
+      if(warnings.length) {
+        html += `<div class="output-section warning">
+          <div class="output-title">⚠️ ${warnings.length} möglicherweise unsichere Übersetzung(en)</div>
+          <div class="output-line">Betroffene Begriffe: ${warnings.map(w=>`<span class="unknown-term">${w.chunk}</span>`).join(', ')}</div>
+          <div class="output-line">💡 Tipp: Überprüfe Schreibweise oder probiere Alternativen aus der Begriffstabelle</div>
+        </div>`;
+      }
+      
+      if(unknowns.length) {
+        html += `<div class="output-section error">
+          <div class="output-title">❌ ${unknowns.length} unbekannte Begriffe</div>
+          <div class="output-line">Nicht erkannt: ${unknowns.map(u=>`<span class="unknown-term">${u}</span>`).join(', ')}</div>
+          <div class="output-line">🔍 Vorschläge: <span class="suggestion">re, li, Umschlag, k2tog, yo, jeté</span></div>
+          <div style="font-size:1.1rem;margin-top:16px;color:var(--text-muted)">Probiere den 🎲 Zufallsbeispiel-Button für korrekte Syntax</div>
+        </div>`;
+      }
+      
+      // SICHERE ÜBERSETZUNGEN
+      if(results.length) {
+        html += `<div class="output-section de"><div class="output-title">🇩🇪 Deutsch</div>${results.map(r=>`<div class="output-line">${r.entry.de.split('|')[0]}</div>`).join('')}</div>`;
+        html += `<div class="output-section en"><div class="output-title">🇺🇸 English</div>${results.map(r=>`<div class="output-line">${r.entry.en.split('|')[0]}</div>`).join('')}</div>`;
+        html += `<div class="output-section fr"><div class="output-title">🇫🇷 Français</div>${results.map(r=>`<div class="output-line">${r.entry.fr.split('|')[0]}</div>`).join('')}</div>`;
+      }
+      
+      return html || '<div style="text-align:center;padding:80px;color:var(--text-muted)"><div style="font-size:2.5rem;margin-bottom:24px">🎯</div>Keine Treffer gefunden.<br><strong style="color:var(--accent);font-size:1.3rem">Probiere: "re, li, Umschlag, k2tog, yo" oder klicke 🎲 Zufälliges Beispiel</strong></div>';
     }
-  }
 
-  function pickLists(lang) {
-    if (lang === "de") return { short: deShort, long: deLong };
-    if (lang === "en") return { short: enShort, long: enLong };
-    return { short: frShort, long: frLong };
-  }
-
-  const main = pickLists(mainLang);
-
-  let header = "";
-  if (anyWarning) {
-    header += "<div class='warning'>Hinweis: Übersetzungsfehler oder Ungenauigkeiten möglich. Bitte Eingabe prüfen.</div>";
-  }
-
-  function renderMainSection(label, lists) {
-    const sLine = lists.short.length ? lists.short.join(", ") : "-";
-    const lLine = lists.long.length  ? lists.long.join(", ")  : "-";
-
-    return `
-      <div>
-        <div class="section-title">${label} – Kurzformen</div>
-        <div>${sLine}</div>
-        <div class="section-title" style="margin-top:6px;">${label} – Langformen</div>
-        <div>${lLine}</div>
-      </div>
-    `;
-  }
-
-  function shortJoined(list) {
-    return list.length ? list.join(", ") : "-";
-  }
-
-  let secondaryHtml = "";
-  if (showOthers) {
-    if (mainLang !== "de") {
-      secondaryHtml += `<div class="secondary-row"><span class="secondary-label">Deutsch:</span>${shortJoined(deShort)}</div>`;
+    function doTranslate() {
+      const now = Date.now();
+      if(now - lastTranslationTime < 1000) return; // Debounce
+      lastTranslationTime = now;
+      
+      const input = document.getElementById('input').value;
+      if(!input.trim()) return;
+      
+      const chunks = normalize(input);
+      const analysis = findMatches(chunks);
+      
+      document.getElementById('output').innerHTML = renderOutput(analysis);
+      
+      // NEUES ZITAT NUR BEI NEUER ÜBERSETZUNG
+      if(!showedQuote || Math.random() < 0.3) {
+        showRandomQuote();
+      }
     }
-    if (mainLang !== "en") {
-      secondaryHtml += `<div class="secondary-row"><span class="secondary-label">English:</span>${shortJoined(enShort)}</div>`;
-    }
-    if (mainLang !== "fr") {
-      secondaryHtml += `<div class="secondary-row"><span class="secondary-label">Français:</span>${shortJoined(frShort)}</div>`;
-    }
-  }
 
-  const mainLabel = mainLang === "de" ? "Deutsch" : mainLang === "en" ? "English" : "Français";
-
-  const html =
-    header +
-    renderMainSection(mainLabel, main) +
-    secondaryHtml;
-
-  document.getElementById('output').innerHTML = html;
-
-  // Zitat nur bei echten neuen Übersetzungen triggen
-  if (triggerQuote && shouldShowQuote()) {
-    document.getElementById('quote').innerHTML = renderQuoteBlock();
-  } else if (!triggerQuote) {
-    // aus Historie: kein neues Zitat
-    document.getElementById('quote').innerHTML = "";
-  }
-}
-
-// Dark Mode & Schriftgröße
-const bodyEl = document.body;
-
-function applyDarkMode(on) {
-  if (on) {
-    document.documentElement.style.setProperty("--bg", "#020617");
-    document.documentElement.style.setProperty("--card-bg", "#0f172a");
-    document.documentElement.style.setProperty("--text-main", "#e5e7eb");
-    document.documentElement.style.setProperty("--text-muted", "#9ca3af");
-    document.documentElement.style.setProperty("--border", "#1f2937");
-    document.documentElement.style.setProperty("--table-head-bg", "#111827");
-    document.documentElement.style.setProperty("--quote-bg", "#111827");
-    document.documentElement.style.setProperty("--quote-border", "#1f2937");
-    document.documentElement.style.setProperty("--output-bg", "#020617");
-    bodyEl.style.background = "var(--bg)";
-    const textareas = document.querySelectorAll("textarea");
-    textareas.forEach(t => {
-      t.style.background = "#020617";
-      t.style.color = "#e5e7eb";
-      t.style.borderColor = "#1f2937";
+    // ZUFÄLLIGE BEISPIELE (5-7 Schritte, EN/FR)
+    document.getElementById('randomExample').addEventListener('click', ()=>{
+      const enExamples = [
+        "k2, yo, k2tog, p2, k1 p1 rib, kfb, p2tog",
+        "p1, k2tog, yo, k4, p2tog tbl, kfb, k1",
+        "kfb, p2, k2tog, yo, p1, k1 tbl, ssk",
+        "yo, k3, p2tog, kfb, ssk, k2, p2tog tbl",
+        "k1 p1 rib 6 rows, k2tog, yo, kfb, p2",
+        "p2tog, k4, yo, ssk, kfb, p1, k1 tbl"
+      ];
+      const frExamples = [
+        "2 m.end., jeté, 2 ens.end., 2 m.env., 1 end 1 env jusqu'à fin",
+        "1 m.env., 2 ens.end., jeté, 4 m.end., 2 ens.env., augmenter",
+        "augmenter, 2 m.env., 2 ens.end., jeté, diminuer end, k1",
+        "jeté, 3 m.end., 2 ens.env., augmenter, 2 ens.end., 2 m.env.",
+        "1 end 1 env 6 rangs, 2 ens.end., jeté, augmenter, 2 m.env."
+      ];
+      
+      const allExamples = [...enExamples, ...frExamples];
+      const randomExample = allExamples[Math.floor(Math.random() * allExamples.length)];
+      document.getElementById('input').value = randomExample;
+      doTranslate();
     });
-  } else {
-    document.documentElement.style.setProperty("--bg", "#f5f7fb");
-    document.documentElement.style.setProperty("--card-bg", "#ffffff");
-    document.documentElement.style.setProperty("--text-main", "#111827");
-    document.documentElement.style.setProperty("--text-muted", "#6b7280");
-    document.documentElement.style.setProperty("--border", "#e5e7eb");
-    document.documentElement.style.setProperty("--table-head-bg", "#eff1ff");
-    document.documentElement.style.setProperty("--quote-bg", "#eef2ff");
-    document.documentElement.style.setProperty("--quote-border", "#d1d5ff");
-    document.documentElement.style.setProperty("--output-bg", "#f9fafb");
-    bodyEl.style.background = "var(--bg)";
-    const textareas = document.querySelectorAll("textarea");
-    textareas.forEach(t => {
-      t.style.background = "#ffffff";
-      t.style.color = "#111827";
-      t.style.borderColor = "var(--border)";
+
+    // EVENT LISTENER
+    document.getElementById('btn').addEventListener('click', doTranslate);
+    document.getElementById('clear').addEventListener('click', ()=> {
+      document.getElementById('input').value = '';
+      document.getElementById('output').innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-muted)">Bereit für neue Strickanweisungen ⬆️</div>';
+      document.getElementById('quote').classList.add('hidden');
     });
-  }
-}
 
-function applyFontSize(mode) {
-  if (mode === "large") {
-    bodyEl.style.fontSize = "110%";
-  } else if (mode === "xlarge") {
-    bodyEl.style.fontSize = "125%";
-  } else {
-    bodyEl.style.fontSize = "100%";
-  }
-}
-
-document.getElementById('darkToggle').addEventListener('change', (e) => {
-  applyDarkMode(e.target.checked);
-});
-
-// Schriftgrößen-Buttons (aktuell unsichtbar, aber funktionsfähig)
-const fontButtons = document.querySelectorAll(".font-btn");
-fontButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    fontButtons.forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    applyFontSize(btn.getAttribute("data-size"));
-  });
-});
-
-// Tabelle ein-/ausklappen
-const tableToggle = document.getElementById("tableToggle");
-const tableContainer = document.getElementById("tableContainer");
-const tableToggleIcon = document.getElementById("tableToggleIcon");
-
-tableToggle.addEventListener("click", () => {
-  const hidden = tableContainer.classList.contains("hidden");
-  if (hidden) {
-    tableContainer.classList.remove("hidden");
-    tableToggleIcon.textContent = "▼";
-  } else {
-    tableContainer.classList.add("hidden");
-    tableToggleIcon.textContent = "▶";
-  }
-});
-
-// Initial Verlauf laden
-loadHistory();
-renderHistory();
-
-// Button-Handler: echte neue Übersetzung -> Quote darf triggern
-document.getElementById('btn').addEventListener('click', () => doTranslate(true, true));
-
-/*
-Beispiel-Eingaben zum Testen:
-
-1) Deutsch:
-   Umschlag, 2 re zus., 3 li, 4 re
-
-2) Englisch:
-   yo, k2tog, p2, k4, to end
-
-3) Gemischt:
-   Anschlag, 10 re, 10 li, 1x1 rib, bind off
-
-4) Französisch:
-   jeté, 2 m. end. ens., 3 m.env., jusqu'à la fin
-*/
-</script>
+    document.getElementById('darkToggle').addEventListener('change', e=>document.documentElement.setAttribute('data-theme', e.target.checked?'dark':''));
+    
+    // ENTER TASTATUR-SUPPORT
+    document.getElementById('input').addEventListener('keydown', e=>{
+      if(e.key === 'Enter' && e.ctrlKey) doTranslate();
+    });
+  </script>
 </body>
 </html>
