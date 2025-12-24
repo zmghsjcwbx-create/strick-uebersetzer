@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
   <title>Kerstins Strick-Übersetzer</title>
-
 <head>
   <meta charset="UTF-8">
   <title>Dein Strick-Übersetzer – DE · EN · FR</title>
@@ -22,6 +21,7 @@
       --border: #e5e7eb;
       --danger: #b91c1c;
       --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --table-head-bg: #eff1ff;
     }
 
     * { box-sizing: border-box; }
@@ -39,7 +39,7 @@
     .page {
       max-width: 960px;
       margin: 0 auto;
-      padding: 20px 14px 36px;
+      padding: 60px 14px 36px; /* Platz für fixe Topbar */
       position: relative;
     }
 
@@ -219,19 +219,25 @@
     }
 
     th {
-      background: #eff1ff;
+      background: var(--table-head-bg);
       font-weight: 600;
     }
 
     .top-bar-toggles {
-      position: absolute;
+      position: fixed;
       right: 14px;
-      top: 10px;
+      top: 8px;
+      z-index: 20;
       display: flex;
       gap: 10px;
       font-size: 0.8rem;
       color: var(--text-muted);
       align-items: center;
+      background: rgba(255,255,255,0.85);
+      border-radius: 999px;
+      padding: 4px 8px;
+      border: 1px solid rgba(148,163,184,0.4);
+      backdrop-filter: blur(10px);
     }
 
     .top-toggle-label {
@@ -239,10 +245,6 @@
       align-items: center;
       gap: 4px;
       cursor: pointer;
-      background: rgba(255,255,255,0.7);
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.4);
     }
 
     .font-buttons {
@@ -267,8 +269,8 @@
 
     /* Zitatbox */
     .quote-box {
-      margin-top: 10px;
-      padding: 10px 12px;
+      margin-top: 12px;
+      padding: 12px 14px;
       border-radius: 14px;
       background: #eef2ff;
       border: 1px solid #d1d5ff;
@@ -291,6 +293,58 @@
       color: #4b5563;
     }
 
+    /* Verlauf */
+    .history-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 6px 0 0;
+      font-size: 0.85rem;
+    }
+
+    .history-item {
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      color: #2563eb;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-item span {
+      color: var(--text-muted);
+      margin-right: 4px;
+      font-size: 0.8rem;
+    }
+
+    .history-empty {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Tabelle einklappbar */
+    .table-toggle {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.9rem;
+      color: #2563eb;
+    }
+
+    .table-toggle-icon {
+      font-size: 0.9rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+
     @media (max-width: 640px) {
       .card {
         padding: 16px 14px 18px;
@@ -307,33 +361,34 @@
         width: 100%;
         text-align: center;
       }
+      .page {
+        padding-top: 72px;
+      }
       .top-bar-toggles {
-        position: static;
-        justify-content: flex-end;
-        margin-bottom: 6px;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
       }
     }
   </style>
 </head>
 <body>
-<div class="page">
-
-  <!-- Dark Mode & Schriftgröße -->
-  <div class="top-bar-toggles">
-    <label class="top-toggle-label">
-      <input type="checkbox" id="darkToggle">
-      Dark&nbsp;Mode
-    </label>
-    <div class="top-toggle-label">
-      Schrift:
-      <div class="font-buttons">
-        <button type="button" class="font-btn active" data-size="normal">Normal</button>
-        <button type="button" class="font-btn" data-size="large">Groß</button>
-        <button type="button" class="font-btn" data-size="xlarge">Sehr groß</button>
-      </div>
+<div class="top-bar-toggles">
+  <label class="top-toggle-label">
+    <input type="checkbox" id="darkToggle">
+    Dark&nbsp;Mode
+  </label>
+  <div class="top-toggle-label">
+    Schrift:
+    <div class="font-buttons">
+      <button type="button" class="font-btn active" data-size="normal">Normal</button>
+      <button type="button" class="font-btn" data-size="large">Groß</button>
+      <button type="button" class="font-btn" data-size="xlarge">Sehr groß</button>
     </div>
   </div>
+</div>
 
+<div class="page">
   <header>
     <h1>Dein Strick-Übersetzer</h1>
     <p class="subtitle">Deutsch · Englisch · Französisch – klar und übersichtlich, auch für Handy &amp; Tablet.</p>
@@ -373,24 +428,37 @@
   </div>
 
   <div class="card">
-    <h2>Übersicht: Begriffe Deutsch / Englisch / Französisch</h2>
-    <table>
-      <tr><th>Deutsch</th><th>Englisch (US/UK)</th><th>Französisch</th><th>Hinweis</th></tr>
-      <tr><td>rechte Masche (re)</td><td>knit (k)</td><td>maille endroit (m.end.)</td><td>Grundmasche rechts</td></tr>
-      <tr><td>linke Masche (li)</td><td>purl (p)</td><td>maille envers (m.env.)</td><td>Grundmasche links</td></tr>
-      <tr><td>Umschlag (U)</td><td>yarn over (yo)</td><td>jeté</td><td>Loch / Zunahme über Fadenumschlag</td></tr>
-      <tr><td>2 zus. re</td><td>k2tog</td><td>2 m. end. ens.</td><td>2 Maschen rechts zusammenstricken</td></tr>
-      <tr><td>2 zus. li</td><td>p2tog</td><td>2 m. env. ens.</td><td>2 Maschen links zusammenstricken</td></tr>
-      <tr><td>Überzug re</td><td>ssk</td><td>surjet simple</td><td>schräge Abnahme nach links</td></tr>
-      <tr><td>Anschlag</td><td>cast on (CO)</td><td>monter</td><td>Maschen neu anschlagen</td></tr>
-      <tr><td>Abketten</td><td>bind off (BO)</td><td>rabattre</td><td>Maschen elastisch beenden</td></tr>
-      <tr><td>bis Ende</td><td>to end</td><td>jusqu'à la fin</td><td>bis zum Reihenende fortsetzen</td></tr>
-      <tr><td>Rippenmuster 1x1</td><td>1x1 rib</td><td>côtes 1x1</td><td>abwechselnd 1 re, 1 li</td></tr>
-      <tr><td>Rippenmuster 2x2</td><td>2x2 rib</td><td>côtes 2x2</td><td>2 re, 2 li im Wechsel</td></tr>
-      <tr><td>kraus rechts</td><td>garter stitch</td><td>point mousse</td><td>in allen Reihen rechts</td></tr>
-      <tr><td>glatt rechts</td><td>stocking stitch</td><td>jersey endroit</td><td>Vorderseite rechts, Rückseite links</td></tr>
-      <tr><td>Perlmuster</td><td>moss stitch</td><td>point de riz</td><td>abwechselnd re/li, versetzt in der Höhe</td></tr>
-    </table>
+    <h2 style="margin-bottom:4px;">Verlauf der letzten Eingaben</h2>
+    <p class="hint" style="margin-top:0;">Klicke auf eine Zeile, um die Eingabe erneut zu laden.</p>
+    <ul id="history" class="history-list"></ul>
+  </div>
+
+  <div class="card">
+    <div class="table-toggle" id="tableToggle">
+      <span class="table-toggle-icon" id="tableToggleIcon">▶</span>
+      <span>Begriffstabelle anzeigen / ausblenden</span>
+    </div>
+
+    <div id="tableContainer" class="hidden">
+      <h2>Übersicht: Begriffe Deutsch / Englisch / Französisch</h2>
+      <table>
+        <tr><th>Deutsch</th><th>Englisch (US/UK)</th><th>Französisch</th><th>Hinweis</th></tr>
+        <tr><td>rechte Masche (re)</td><td>knit (k)</td><td>maille endroit (m.end.)</td><td>Grundmasche rechts</td></tr>
+        <tr><td>linke Masche (li)</td><td>purl (p)</td><td>maille envers (m.env.)</td><td>Grundmasche links</td></tr>
+        <tr><td>Umschlag (U)</td><td>yarn over (yo)</td><td>jeté</td><td>Loch / Zunahme über Fadenumschlag</td></tr>
+        <tr><td>2 zus. re</td><td>k2tog</td><td>2 m. end. ens.</td><td>2 Maschen rechts zusammenstricken</td></tr>
+        <tr><td>2 zus. li</td><td>p2tog</td><td>2 m. env. ens.</td><td>2 Maschen links zusammenstricken</td></tr>
+        <tr><td>Überzug re</td><td>ssk</td><td>surjet simple</td><td>schräge Abnahme nach links</td></tr>
+        <tr><td>Anschlag</td><td>cast on (CO)</td><td>monter</td><td>Maschen neu anschlagen</td></tr>
+        <tr><td>Abketten</td><td>bind off (BO)</td><td>rabattre</td><td>Maschen elastisch beenden</td></tr>
+        <tr><td>bis Ende</td><td>to end</td><td>jusqu'à la fin</td><td>bis zum Reihenende fortsetzen</td></tr>
+        <tr><td>Rippenmuster 1x1</td><td>1x1 rib</td><td>côtes 1x1</td><td>abwechselnd 1 re, 1 li</td></tr>
+        <tr><td>Rippenmuster 2x2</td><td>2x2 rib</td><td>côtes 2x2</td><td>2 re, 2 li im Wechsel</td></tr>
+        <tr><td>kraus rechts</td><td>garter stitch</td><td>point mousse</td><td>in allen Reihen rechts</td></tr>
+        <tr><td>glatt rechts</td><td>stocking stitch</td><td>jersey endroit</td><td>Vorderseite rechts, Rückseite links</td></tr>
+        <tr><td>Perlmuster</td><td>moss stitch</td><td>point de riz</td><td>abwechselnd re/li, versetzt in der Höhe</td></tr>
+      </table>
+    </div>
 
     <p style="margin-top:10px;font-size:0.85rem;color:#6b7280;">
       Brauchst du Hilfe?
@@ -555,7 +623,38 @@ function renderQuoteBlock() {
   `;
 }
 
-function doTranslate() {
+// Verlauf
+let historyEntries = []; // {text, timestamp}
+
+function addToHistory(text) {
+  const trimmed = text.trim();
+  if (!trimmed) return;
+  historyEntries.unshift({ text: trimmed, time: new Date() });
+  if (historyEntries.length > 100) historyEntries.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const ul = document.getElementById('history');
+  ul.innerHTML = "";
+  if (historyEntries.length === 0) {
+    ul.innerHTML = "<p class='history-empty'>Noch keine Einträge.</p>";
+    return;
+  }
+  historyEntries.forEach((entry, idx) => {
+    const li = document.createElement("li");
+    li.className = "history-item";
+    const shortText = entry.text.length > 80 ? entry.text.slice(0, 80) + " …" : entry.text;
+    li.innerHTML = `<span>#${historyEntries.length - idx}</span>${shortText}`;
+    li.addEventListener("click", () => {
+      document.getElementById('input').value = entry.text;
+      doTranslate(false); // ohne erneut in die Historie einzutragen
+    });
+    ul.appendChild(li);
+  });
+}
+
+function doTranslate(addHistory = true) {
   const raw = document.getElementById('input').value;
   const mainLang = document.getElementById('mainLang').value;
   const showOthers = document.getElementById('showOthers').checked;
@@ -568,6 +667,8 @@ function doTranslate() {
     document.getElementById('quote').innerHTML = "";
     return;
   }
+
+  if (addHistory) addToHistory(raw);
 
   const chunks = cleaned
     .split(",")
@@ -702,6 +803,7 @@ function applyDarkMode(on) {
     document.documentElement.style.setProperty("--text-main", "#e5e7eb");
     document.documentElement.style.setProperty("--text-muted", "#9ca3af");
     document.documentElement.style.setProperty("--border", "#1f2937");
+    document.documentElement.style.setProperty("--table-head-bg", "#1f2937");
     bodyEl.style.background = "var(--bg)";
     const textareas = document.querySelectorAll("textarea");
     textareas.forEach(t => {
@@ -709,18 +811,29 @@ function applyDarkMode(on) {
       t.style.color = "#e5e7eb";
       t.style.borderColor = "#1f2937";
     });
+    const outputs = document.querySelectorAll(".output");
+    outputs.forEach(o => {
+      o.style.background = "#020617";
+      o.style.borderColor = "#1f2937";
+    });
   } else {
     document.documentElement.style.setProperty("--bg", "#f5f7fb");
     document.documentElement.style.setProperty("--card-bg", "#ffffff");
     document.documentElement.style.setProperty("--text-main", "#111827");
     document.documentElement.style.setProperty("--text-muted", "#6b7280");
     document.documentElement.style.setProperty("--border", "#e5e7eb");
+    document.documentElement.style.setProperty("--table-head-bg", "#eff1ff");
     bodyEl.style.background = "var(--bg)";
     const textareas = document.querySelectorAll("textarea");
     textareas.forEach(t => {
       t.style.background = "#ffffff";
       t.style.color = "#111827";
       t.style.borderColor = "var(--border)";
+    });
+    const outputs = document.querySelectorAll(".output");
+    outputs.forEach(o => {
+      o.style.background = "#f9fafb";
+      o.style.borderColor = "var(--border)";
     });
   }
 }
@@ -749,8 +862,27 @@ fontButtons.forEach(btn => {
   });
 });
 
+// Tabelle ein-/ausklappen
+const tableToggle = document.getElementById("tableToggle");
+const tableContainer = document.getElementById("tableContainer");
+const tableToggleIcon = document.getElementById("tableToggleIcon");
+
+tableToggle.addEventListener("click", () => {
+  const hidden = tableContainer.classList.contains("hidden");
+  if (hidden) {
+    tableContainer.classList.remove("hidden");
+    tableToggleIcon.textContent = "▼";
+  } else {
+    tableContainer.classList.add("hidden");
+    tableToggleIcon.textContent = "▶";
+  }
+});
+
+// Initial Verlauf
+renderHistory();
+
 // Button-Handler
-document.getElementById('btn').addEventListener('click', doTranslate);
+document.getElementById('btn').addEventListener('click', () => doTranslate(true));
 </script>
 </body>
 </html>
