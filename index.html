@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Dein Strick-Übersetzer – DE · EN · FR</title>
+  <title>Kerstins Strickübersetzer – DE · EN · FR</title>
 
   <!-- Favicon: Datei favicon.png ins Repo legen -->
   <link rel="icon" type="image/png" href="favicon.png">
@@ -41,7 +41,7 @@
     .page {
       max-width: 960px;
       margin: 0 auto;
-      padding: 60px 14px 36px; /* Platz für fixe Topbar */
+      padding: 60px 14px 36px;
       position: relative;
     }
 
@@ -137,6 +137,16 @@
     button:active {
       transform: scale(0.98);
       box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-example {
+      background: #10b981;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35);
+    }
+
+    .btn-example:hover {
+      background: #059669;
+      box-shadow: 0 5px 14px rgba(16, 185, 129, 0.45);
     }
 
     .controls-inline {
@@ -254,12 +264,10 @@
       cursor: pointer;
     }
 
-    /* Schriftgrößen-Buttons vorerst unsichtbar lassen */
     .font-buttons-wrapper {
       display: none;
     }
 
-    /* Zitatbox */
     .quote-box {
       margin-top: 16px;
       padding: 14px 16px;
@@ -285,7 +293,6 @@
       color: var(--text-muted);
     }
 
-    /* Verlauf */
     .history-list {
       list-style: none;
       padding-left: 0;
@@ -319,7 +326,6 @@
       margin: 0;
     }
 
-    /* Tabelle einklappbar */
     .table-toggle {
       cursor: pointer;
       display: inline-flex;
@@ -383,7 +389,7 @@
 <div class="page">
   <header>
     <h1>Dein Strick-Übersetzer</h1>
-    <p class="subtitle">Deutsch · Englisch · Französisch – klar und übersichtlich, auch für Handy &amp; Tablet.</p>
+    <p class="subtitle">Deutsch · Englisch · Französisch – klar und übersichtlich, auch für Handy & Tablet.</p>
   </header>
 
   <div class="card">
@@ -392,7 +398,10 @@
       placeholder="Schreibe hier deine Strickanweisung, z.B.:  Umschlag, 2 re zus., 3 li, 4 re"></textarea>
 
     <div class="top-row">
-      <button id="btn">Übersetzen</button>
+      <div>
+        <button id="btn">Übersetzen</button>
+        <button id="btnExample" class="btn-example">Zufälliges Beispiel</button>
+      </div>
 
       <div class="controls-inline">
         <div>
@@ -457,7 +466,7 @@
     <h2>Tech‑Support</h2>
     <p style="margin-top:4px;font-size:0.9rem;color:#6b7280;">
       Brauchst du Hilfe?
-      <a href="sms:+491701234567&body=Hallo%20Tobi,%20ich%20brauche%20Hilfe%20beim%20Strick-%C3%9Cbersetzer."
+      <a id="techSupportLink" href="sms:+491701234567&body=Hallo%20Tobi,%20ich%20brauche%20Hilfe%20beim%20Strick-%C3%9Cbersetzer."
          style="color:#2563eb;text-decoration:none;">
         Tech‑Support per Nachricht öffnen
       </a>
@@ -901,28 +910,47 @@ tableToggle.addEventListener("click", () => {
   }
 });
 
+// Zufälliges Beispiel generieren
+const examples = [
+  "yo, k2tog, p2, k4, to end",
+  "k1, p1, k1, p1, to end",
+  "p1, k1, p1, k1, to end",
+  "jeté, 2 m. end. ens., 3 m.env., jusqu'à la fin",
+  "2 m. env. ens., 2 m. end. ens., jusqu'à la fin",
+  "monter, 10 m. end., 10 m.env., côtes 1x1, rabattre",
+  "cast on, 10 k, 10 p, 1x1 rib, bind off"
+];
+
+document.getElementById('btnExample').addEventListener('click', () => {
+  const example = examples[Math.floor(Math.random() * examples.length)];
+  document.getElementById('input').value = example;
+  doTranslate(true, true);
+});
+
+// Tech-Support mit Session-ID und Debug-Info
+function updateTechSupportLink() {
+  const input = document.getElementById('input').value;
+  const output = document.getElementById('output').innerText;
+  const sessionId = Math.random().toString(36).substring(2, 10);
+  const userAgent = navigator.userAgent;
+  const errorLog = console.error.toString();
+  const body = encodeURIComponent(
+    `Session-ID: ${sessionId}\n\nEingabe: ${input}\n\nAusgabe: ${output}\n\nUser-Agent: ${userAgent}\n\nFehler: ${errorLog}`
+  );
+  document.getElementById('techSupportLink').href = `sms:+491701234567&body=Hallo%20Tobi,%20ich%20brauche%20Hilfe%20beim%20Strick-%C3%9Cbersetzer.%0A%0A${body}`;
+}
+
+document.getElementById('btn').addEventListener('click', () => {
+  doTranslate(true, true);
+  updateTechSupportLink();
+});
+
 // Initial Verlauf laden
 loadHistory();
 renderHistory();
 
-// Button-Handler: echte neue Übersetzung -> Quote darf triggern
-document.getElementById('btn').addEventListener('click', () => doTranslate(true, true));
-
-/*
-Beispiel-Eingaben zum Testen:
-
-1) Deutsch:
-   Umschlag, 2 re zus., 3 li, 4 re
-
-2) Englisch:
-   yo, k2tog, p2, k4, to end
-
-3) Gemischt:
-   Anschlag, 10 re, 10 li, 1x1 rib, bind off
-
-4) Französisch:
-   jeté, 2 m. end. ens., 3 m.env., jusqu'à la fin
-*/
+// Update Tech-Support-Link bei Seite laden
+updateTechSupportLink();
 </script>
 </body>
 </html>
