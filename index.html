@@ -539,21 +539,60 @@ function doTranslate() {
     header = "<div class='warning'>Hinweis: Übersetzungsfehler oder Ungenauigkeiten möglich. Bitte Eingabe prüfen.</div>";
   }
 
+    function pickLists(lang) {
+    if (lang === "de") return { short: deShort, long: deLong };
+    if (lang === "en") return { short: enShort, long: enLong };
+    return { short: frShort, long: frLong };
+  }
+
+  const main = pickLists(mainLang);
+
+  let header = "";
+  if (anyWarning) {
+    header = "<div class='warning'>Hinweis: Übersetzungsfehler oder Ungenauigkeiten möglich. Bitte Eingabe prüfen.</div>";
+  }
+
   function renderMainSection(label, lists) {
-    const sList = lists.short.length ? "<ul class='main-list'><li>" +
-      lists.short.join("</li><li>") + "</li></ul>" : "-";
-    const lList = lists.long.length ? "<ul class='main-list'><li>" +
-      lists.long.join("</li><li>") + "</li></ul>" : "-";
+    const sLine = lists.short.length ? lists.short.join(", ") : "-";
+    const lLine = lists.long.length  ? lists.long.join(", ")  : "-";
 
     return `
       <div>
         <div class="section-title">${label} – Kurzformen</div>
-        ${sList}
+        <div>${sLine}</div>
         <div class="section-title" style="margin-top:6px;">${label} – Langformen</div>
-        ${lList}
+        <div>${lLine}</div>
       </div>
     `;
   }
+
+  function shortJoined(list) {
+    return list.length ? list.join(", ") : "-";
+  }
+
+  let secondaryHtml = "";
+  if (showOthers) {
+    if (mainLang !== "de") {
+      secondaryHtml += `<div class="secondary-row"><span class="secondary-label">Deutsch:</span>${shortJoined(deShort)}</div>`;
+    }
+    if (mainLang !== "en") {
+      secondaryHtml += `<div class="secondary-row"><span class="secondary-label">English:</span>${shortJoined(enShort)}</div>`;
+    }
+    if (mainLang !== "fr") {
+      secondaryHtml += `<div class="secondary-row"><span class="secondary-label">Français:</span>${shortJoined(frShort)}</div>`;
+    }
+  }
+
+  const mainLabel = mainLang === "de" ? "Deutsch" : mainLang === "en" ? "English" : "Français";
+
+  const html =
+    header +
+    renderMainSection(mainLabel, main) +
+    secondaryHtml;
+
+  document.getElementById('output').innerHTML = html;
+}
+
 
   function shortJoined(list) {
     return list.length ? list.join(", ") : "-";
