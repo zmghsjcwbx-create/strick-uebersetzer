@@ -8,7 +8,7 @@
 <p><strong>Eingabe:</strong></p>
 <textarea id="input" rows="3" cols="60"
   placeholder="z.B.: p1, k1 to end oder 1 li, 1 re bis Ende"></textarea><br>
-<button onclick="translate()">Übersetzen</button>
+<button id="btn">Übersetzen</button>
 
 <!-- Ausgabe -->
 <p><strong>Ausgabe:</strong></p>
@@ -31,9 +31,8 @@
 <tr><td>Anschlag</td><td>cast on</td><td>monter</td><td>Maschen anschlagen</td></tr>
 <tr><td>Abketten</td><td>bind off</td><td>rabattre</td><td>Maschen abketten</td></tr>
 </table>
-
+  
 <script>
-// Wort-Liste – kann erweitert werden
 const dict = [
   { de: "1 li, 1 re bis ende", en: "p1, k1 to end", fr: "1 m.env., 1 m.end. jusqu'à la fin" },
   { de: "rechte masche",        en: "knit",          fr: "maille endroit" },
@@ -45,7 +44,7 @@ const dict = [
   { de: "anschlagen",           en: "cast on",       fr: "monter" }
 ];
 
-function translate() {
+function doTranslate() {
   const text = document.getElementById('input').value.toLowerCase();
   let result = "Keine direkte Übersetzung gefunden – bitte genaueren Begriff eingeben.";
 
@@ -66,6 +65,8 @@ function translate() {
 
   document.getElementById('output').innerHTML = result;
 }
+
+document.getElementById('btn').addEventListener('click', doTranslate);
 </script>
 </body>
 </html>
