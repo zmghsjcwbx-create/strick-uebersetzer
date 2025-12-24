@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de">
+<head><title>Strick-Übersetzer Mama</title></head>
+<body>
+<h1>Strick-Übersetzer: Deutsch ↔ Englisch ↔ Französisch</h1>
+
+<table border="1" style="border-collapse:collapse;font-family:Arial;">
+<tr><th>Deutsch</th><th>Englisch (US/UK)</th><th>Französisch</th><th>Bedeutung</th></tr>
+<tr><td>rechts / re</td><td>knit / k</td><td>endroit / end. / m.end.</td><td>Rechte Masche</td></tr>
+<tr><td>links / li</td><td>purl / p</td><td>envers / env. / m.env.</td><td>Linke Masche</td></tr>
+<tr><td>zusammen / zus</td><td>together / tog</td><td>ensemble / ens.</td><td>Zusammenstricken</td></tr>
+<tr><td>Umschlag / U</td><td>yarn over / yo</td><td>jeté / j</td><td>Umschlag</td></tr>
+<tr><td>2 re zus</td><td>k2tog</td><td>2 m. ens. à l'end.</td><td>2 zusammen rechts</td></tr>
+<tr><td>1 li zus</td><td>p2tog</td><td>2 m. ens. à l'env.</td><td>2 zusammen links</td></tr>
+<tr><td>bis Ende</td><td>to end</td><td>jusq'à la fin</td><td>Bis Reiheende</td></tr>
+<tr><td>Ribbmuster 1x1</td><td>1x1 rib</td><td>côtes 1x1</td><td>1 li, 1 re wiederholen</td></tr>
+<tr><td>Anschlag</td><td>cast on</td><td>monter</td><td>Maschen anschlagen</td></tr>
+<tr><td>Abketteln</td><td>bind off</td><td>rabattre</td><td>Abketten</td></tr>
+</table>
+
+<h2>Beispiel: p1, k1 to end</h2>
+<p><strong>Deutsch:</strong> 1 li, 1 re bis Ende<br>
+<strong>Französisch:</strong> 1 m.env., 1 m.end. jusqu'à la fin</p>
+</body>
+</html>
