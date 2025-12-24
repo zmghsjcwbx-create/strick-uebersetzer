@@ -2,63 +2,314 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Kerstins Strick-Übersetzer</title>
+  <title>Frohe Weihnachten 2025 – Dein Strick-Übersetzer</title>
+
+  <!-- Favicon: Datei favicon.png ins Repo legen -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <style>
+    :root {
+      --bg: #f7f7fb;
+      --card-bg: #ffffff;
+      --accent: #4b6cff;
+      --accent-light: #e0e6ff;
+      --text-main: #222222;
+      --text-muted: #555555;
+      --border: #dddddd;
+      --danger: #c0392b;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+      background: radial-gradient(circle at top left, #fdf2ff 0, #f7f7fb 40%, #eef4ff 100%);
+      color: var(--text-main);
+    }
+
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 1.9rem;
+      text-align: center;
+      color: var(--accent);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+      padding: 20px 20px 24px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    textarea {
+      width: 100%;
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      font-family: Menlo, "SF Mono", Consolas, monospace;
+      font-size: 0.95rem;
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-light);
+    }
+
+    button {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 999px;
+      padding: 8px 20px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #3c57d4;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 20px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    select {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 0.9rem;
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .output {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 12px 14px 10px;
+      background: #fafafa;
+      min-height: 40px;
+      font-size: 0.95rem;
+    }
+
+    .warning {
+      color: var(--danger);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .lang-block {
+      margin-top: 8px;
+    }
+
+    .lang-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .lang-main {
+      font-size: 1.05rem;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid var(--accent-light);
+    }
+
+    .lang-secondary {
+      font-size: 0.9rem;
+      padding: 6px 8px;
+      border-radius: 6px;
+      margin-top: 4px;
+    }
+
+    .lang-secondary.de { background: #fef6f0; }
+    .lang-secondary.en { background: #eef5ff; }
+    .lang-secondary.fr { background: #f4f4ff; }
+
+    .muted {
+      color: var(--text-muted);
+    }
+
+    table {
+      margin-top: 8px;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 4px 6px;
+      border: 1px solid var(--border);
+    }
+
+    th {
+      background: #f1f4ff;
+    }
+
+    @media (max-width: 640px) {
+      .controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
 </head>
 <body>
-<h1>Frohe Weihnachten 2025 – Dein Strick-Übersetzer: DE ↔ EN ↔ FR</h1>
+<div class="page">
+  <h1>Frohe Weihnachten 2025 – Dein Strick-Übersetzer</h1>
+  <p class="subtitle">Strickanweisungen zwischen Deutsch, Englisch und Französisch schnell übersetzen.</p>
 
-<p><strong>Eingabe:</strong></p>
-<textarea id="input" rows="3" cols="80"
-  placeholder="z.B.: Umschlag, 2 re zus., 3 li, 4 re oder p1, k1 to end"></textarea><br>
-<button id="btn">Übersetzen</button>
+  <div class="card">
+    <label for="input">Eingabe</label>
+    <textarea id="input"
+      placeholder="Beispiele:&#10;• Umschlag, 2 re zus., 3 li, 4 re&#10;• p1, k1 to end&#10;• jeté, 2 m. ens. à l'end., bind off"></textarea>
 
-<p><strong>Ausgabe:</strong></p>
-<div id="output" style="border:1px solid #ccc;padding:8px;min-height:40px;"></div>
+    <div class="controls">
+      <button id="btn">Übersetzen</button>
 
-<hr>
+      <div class="controls-group">
+        <span class="muted">Hauptausgabe:</span>
+        <select id="mainLang">
+          <option value="de">Deutsch</option>
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+        </select>
+      </div>
 
-<h2>Übersicht: Begriffe Deutsch / Englisch / Französisch</h2>
-<table border="1" style="border-collapse:collapse;font-family:Arial;">
-<tr><th>Deutsch</th><th>Englisch (US/UK)</th><th>Französisch</th><th>Bedeutung</th></tr>
-<tr><td>rechts / re</td><td>knit / k</td><td>endroit / end. / m.end.</td><td>Rechte Masche</td></tr>
-<tr><td>links / li</td><td>purl / p</td><td>envers / env. / m.env.</td><td>Linke Masche</td></tr>
-<tr><td>zusammen / zus.</td><td>together / tog</td><td>ensemble / ens.</td><td>Zusammenstricken</td></tr>
-<tr><td>Umschlag / U</td><td>yarn over / yo</td><td>jeté / j</td><td>Umschlag</td></tr>
-<tr><td>2 re zus.</td><td>k2tog</td><td>2 m. ens. à l'end.</td><td>2 zusammen rechts</td></tr>
-<tr><td>2 li zus.</td><td>p2tog</td><td>2 m. ens. à l'env.</td><td>2 zusammen links</td></tr>
-<tr><td>bis Ende</td><td>to end</td><td>jusqu'à la fin</td><td>Bis Reihenende</td></tr>
-<tr><td>Rippenmuster 1x1</td><td>1x1 rib</td><td>côtes 1x1</td><td>Abwechselnd 1 li, 1 re</td></tr>
-<tr><td>Anschlag</td><td>cast on</td><td>monter</td><td>Maschen anschlagen</td></tr>
-<tr><td>Abketten</td><td>bind off</td><td>rabattre</td><td>Maschen abketten</td></tr>
-</table>
+      <div class="controls-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="showOthers" checked>
+          <span>Andere Sprachen anzeigen</span>
+        </label>
+      </div>
+    </div>
+
+    <p style="margin-top: 16px; font-size:0.85rem;" class="muted">
+      In der Hauptsprache werden, soweit möglich, Kurz- und Langform angezeigt
+      (z.&nbsp;B. „k2tog – 2 zusammen rechts“).
+    </p>
+
+    <div id="output" class="output"></div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0;font-size:1.1rem;">Übersicht: Begriffe Deutsch / Englisch / Französisch</h2>
+    <table>
+      <tr><th>Deutsch</th><th>Englisch (US/UK)</th><th>Französisch</th><th>Bedeutung</th></tr>
+      <tr><td>rechts / re</td><td>knit / k</td><td>endroit / end. / m.end.</td><td>Rechte Masche</td></tr>
+      <tr><td>links / li</td><td>purl / p</td><td>envers / env. / m.env.</td><td>Linke Masche</td></tr>
+      <tr><td>zusammen / zus.</td><td>together / tog</td><td>ensemble / ens.</td><td>Zusammenstricken</td></tr>
+      <tr><td>Umschlag / U</td><td>yarn over / yo</td><td>jeté / j</td><td>Umschlag</td></tr>
+      <tr><td>2 re zus.</td><td>k2tog</td><td>2 m. ens. à l'end.</td><td>2 zusammen rechts</td></tr>
+      <tr><td>2 li zus.</td><td>p2tog</td><td>2 m. ens. à l'env.</td><td>2 zusammen links</td></tr>
+      <tr><td>bis Ende</td><td>to end</td><td>jusqu'à la fin</td><td>Bis Reihenende</td></tr>
+      <tr><td>Rippenmuster 1x1</td><td>1x1 rib</td><td>côtes 1x1</td><td>Abwechselnd 1 li, 1 re</td></tr>
+      <tr><td>Anschlag</td><td>cast on</td><td>monter</td><td>Maschen anschlagen</td></tr>
+      <tr><td>Abketten</td><td>bind off</td><td>rabattre</td><td>Maschen abketten</td></tr>
+    </table>
+  </div>
+</div>
 
 <script>
-// Wörterbuch für Einzelbegriffe / feste Phrasen
+// Wörterbuch: Kurz- & Langformen
 const dict = [
-  { de: "rechte masche",        en: "knit",              fr: "maille endroit" },
-  { de: "linke masche",         en: "purl",              fr: "maille envers" },
+  // Grundmaschen
+  { deShort: "re",           deLong: "rechte Masche",
+    enShort: "k",            enLong: "knit",
+    frShort: "m.end.",       frLong: "maille endroit" },
 
-  { de: "1 li, 1 re bis ende",  en: "p1, k1 to end",     fr: "1 m.env., 1 m.end. jusqu'à la fin" },
-  { de: "1 re, 1 li bis ende",  en: "k1, p1 to end",     fr: "1 m.end., 1 m.env. jusqu'à la fin" },
+  { deShort: "li",           deLong: "linke Masche",
+    enShort: "p",            enLong: "purl",
+    frShort: "m.env.",       frLong: "maille envers" },
 
-  { de: "umschlag",             en: "yarn over",         fr: "jeté" },
-  { de: "zunahme",              en: "increase",          fr: "augmentation" },
-  { de: "masche aus dem querfaden zunehmen",
-    en: "m1",                   fr: "augmenter 1 m dans le brin" },
+  // Feste Reihen
+  { deShort: "1 li, 1 re bis ende", deLong: "Rippenmuster 1x1",
+    enShort: "p1, k1 to end",       enLong: "1x1 rib",
+    frShort: "1 m.env., 1 m.end. jusqu'à la fin", frLong: "côtes 1x1" },
 
-  { de: "2 zusammen rechts",    en: "k2tog",             fr: "2 m. ens. à l'end." },
-  { de: "2 zusammen links",     en: "p2tog",             fr: "2 m. ens. à l'env." },
-  { de: "überzug rechts",       en: "ssk",               fr: "surjet simple à l'endroit" },
+  // Umschlag / Zunahmen
+  { deShort: "umschlag",     deLong: "Umschlag",
+    enShort: "yo",           enLong: "yarn over",
+    frShort: "jeté",         frLong: "jeté" },
 
-  { de: "anschlagen",           en: "cast on",           fr: "monter" },
-  { de: "abketten",             en: "bind off",          fr: "rabattre" },
-  { de: "bis ende",             en: "to end",            fr: "jusqu'à la fin" },
+  { deShort: "zunahme",      deLong: "Zunahme",
+    enShort: "inc",          enLong: "increase",
+    frShort: "augm.",        frLong: "augmentation" },
 
-  { de: "rippenmuster 1x1",     en: "1x1 rib",           fr: "côtes 1x1" },
-  { de: "rippenmuster 2x2",     en: "2x2 rib",           fr: "côtes 2x2" },
-  { de: "kraus rechts",         en: "garter stitch",     fr: "point mousse" },
-  { de: "glatt rechts",         en: "stocking stitch",   fr: "jersey endroit" },
-  { de: "perlmuster",           en: "moss stitch",       fr: "point de riz" }
+  // Abnahmen
+  { deShort: "2 zus. re",    deLong: "2 zusammen rechts",
+    enShort: "k2tog",        enLong: "knit 2 together",
+    frShort: "2 m. end. ens.", frLong: "2 mailles ensemble à l'endroit" },
+
+  { deShort: "2 zus. li",    deLong: "2 zusammen links",
+    enShort: "p2tog",        enLong: "purl 2 together",
+    frShort: "2 m. env. ens.", frLong: "2 mailles ensemble à l'envers" },
+
+  { deShort: "überzug re",   deLong: "Überzug rechts",
+    enShort: "ssk",          enLong: "slip, slip, knit",
+    frShort: "surjet",       frLong: "surjet simple à l'endroit" },
+
+  // Randfunktionen
+  { deShort: "anschlagen",   deLong: "Maschen anschlagen",
+    enShort: "CO",           enLong: "cast on",
+    frShort: "monter",       frLong: "monter les mailles" },
+
+  { deShort: "abketten",     deLong: "Maschen abketten",
+    enShort: "BO",           enLong: "bind off",
+    frShort: "rabattre",     frLong: "rabattre les mailles" },
+
+  { deShort: "bis ende",     deLong: "bis Reihenende",
+    enShort: "to end",       enLong: "to the end of row",
+    frShort: "jusqu'à la fin", frLong: "jusqu'à la fin du rang" }
 ];
 
 function normalize(str) {
@@ -69,88 +320,58 @@ function normalize(str) {
     .trim();
 }
 
-function coreDe(entry) {
-  const parts = normalize(entry.de).split(" ");
-  return (parts[0] || "") + (parts[1] ? " " + parts[1] : "");
-}
-
-// Sprache grob erkennen (für Warnungen)
-function detectLang(chunk, entry) {
-  const t = normalize(chunk);
-  let scores = { de: 0, en: 0, fr: 0 };
-
-  if (t.includes(normalize(entry.de))) scores.de += 2;
-  if (t.includes(normalize(entry.en))) scores.en += 2;
-  if (t.includes(normalize(entry.fr))) scores.fr += 2;
-
-  if (/[äöüß]/.test(t)) scores.de += 1;
-  if (/[àâçéèêëîïôùûüÿœ]/.test(t)) scores.fr += 1;
-  if (/[a-z]/.test(t) && t.includes("k") && t.includes("p")) scores.en += 0.5;
-
-  let best = "de";
-  let bestScore = scores.de;
-  for (const lang of ["en", "fr"]) {
-    if (scores[lang] > bestScore) {
-      best = lang;
-      bestScore = scores[lang];
-    }
-  }
-  return { best, scores };
-}
-
-// Generische Erkennung von "Zahl + Maschenart"
+// numerische Muster (3 li, k2 etc.)
 function matchNumericPattern(chunk) {
   const t = normalize(chunk);
-
-  // erkennt z.B. "3 li", "4 re", "k2", "p3"
   const regex = /(\d+)\s*(li|re|k|p)/g;
   let matches = [];
   let m;
   while ((m = regex.exec(t)) !== null) {
     const count = m[1];
     const code  = m[2];
-    let base;
 
+    let entry;
     if (code === "li" || code === "p") {
-      base = { de: "linke masche", en: "purl", fr: "maille envers" };
+      entry = dict.find(e => e.deLong === "linke Masche");
     } else {
-      base = { de: "rechte masche", en: "knit", fr: "maille endroit" };
+      entry = dict.find(e => e.deLong === "rechte Masche");
     }
+    if (!entry) continue;
 
-    matches.push({
-      original: m[0],
-      count,
-      base
-    });
+    matches.push({ count, entry });
   }
   return matches.length ? matches : null;
 }
 
+// generelles Dictionary-Match
 function matchChunkDirect(chunk) {
   const t = normalize(chunk);
 
-  // 1. direkter Treffer
-  for (const entry of dict) {
+  for (const e of dict) {
     if (
-      t.includes(normalize(entry.de)) ||
-      t.includes(normalize(entry.en)) ||
-      t.includes(normalize(entry.fr))
+      t.includes(normalize(e.deShort)) || t.includes(normalize(e.deLong)) ||
+      t.includes(normalize(e.enShort)) || t.includes(normalize(e.enLong)) ||
+      t.includes(normalize(e.frShort)) || t.includes(normalize(e.frLong))
     ) {
-      return entry;
+      return e;
     }
   }
-
-  // 2. über deutsches Kernwort
-  for (const entry of dict) {
-    const c = coreDe(entry);
-    if (c && t.includes(c)) return entry;
-  }
-
   return null;
+}
+
+function detectLangHint(chunk) {
+  const t = normalize(chunk);
+  if (/[àâçéèêëîïôùûüÿœ]/.test(t)) return "fr";
+  if (t.match(/\b(k|p|yo|ssk|k2tog|p2tog|m1|co|bo)\b/)) return "en";
+  if (/[äöüß]/.test(t)) return "de";
+  return "unknown";
 }
 
 function doTranslate() {
   const raw = document.getElementById('input').value;
+  const mainLang = document.getElementById('mainLang').value;
+  const showOthers = document.getElementById('showOthers').checked;
+
   const cleaned = normalize(raw.replace(/[.;:]/g, ","));
 
   if (!cleaned) {
@@ -166,7 +387,7 @@ function doTranslate() {
 
   let anyWarning = false;
 
-  // Sammel-Listen pro Sprache
+  // pro Sprache Liste von Strings (Kurz – Lang)
   let deParts = [];
   let enParts = [];
   let frParts = [];
@@ -175,37 +396,36 @@ function doTranslate() {
     const numericMatches = matchNumericPattern(chunk);
 
     if (numericMatches) {
-      numericMatches.forEach(match => {
-        const c = match.count;
-        const b = match.base;
+      numericMatches.forEach(m => {
+        const c = m.count;
+        const e = m.entry;
 
-        const deText = c + " " + (c === "1" ? b.de : b.de.replace("masche", "maschen"));
-        const enText = (b.en === "knit" ? "k" : "p") + c;
-        const frText = c + " " + (b.fr.startsWith("maille") && c !== "1"
-          ? b.fr.replace("maille", "m.")
-          : b.fr);
+        const deShort = c + " " + (e.deShort === "re" || e.deShort === "li" ? e.deShort : e.deLong);
+        const deLong  = c + " " + (c === "1"
+                          ? e.deLong
+                          : e.deLong.replace("Masche", "Maschen"));
+        const enShort = (e.enShort === "k" || e.enShort === "p")
+                          ? e.enShort + c
+                          : e.enShort;
+        const enLong  = c + " " + e.enLong;
+        const frShort = c + " " + e.frShort;
+        const frLong  = c + " " + e.frLong;
 
-        deParts.push(deText);
-        enParts.push(enText);
-        frParts.push(frText);
+        deParts.push(deShort + " – " + deLong);
+        enParts.push(enShort + " – " + enLong);
+        frParts.push(frShort + " – " + frLong);
       });
       continue;
     }
 
     const entry = matchChunkDirect(chunk);
     if (entry) {
-      const langInfo = detectLang(chunk, entry);
-      let expectedLang = "de";
-      if (chunk.match(/\b(k|p|yo|ssk|k2tog|p2tog|m1)\b/i)) expectedLang = "en";
-      if (/[àâçéèêëîïôùûüÿœ]/.test(chunk)) expectedLang = "fr";
+      const hint = detectLangHint(chunk);
+      if (hint !== "unknown" && hint !== "de") anyWarning = true;
 
-      if (langInfo.best !== expectedLang && expectedLang !== "de") {
-        anyWarning = true;
-      }
-
-      deParts.push(entry.de);
-      enParts.push(entry.en);
-      frParts.push(entry.fr);
+      deParts.push(entry.deShort + " – " + entry.deLong);
+      enParts.push(entry.enShort + " – " + entry.enLong);
+      frParts.push(entry.frShort + " – " + entry.frLong);
     } else {
       anyWarning = true;
       deParts.push("[unbekannt: " + chunk + "]");
@@ -216,14 +436,28 @@ function doTranslate() {
 
   let header = "";
   if (anyWarning) {
-    header = "<p style='color:red;'><strong>Hinweis: Übersetzungsfehler oder Ungenauigkeiten möglich. Bitte Eingabe prüfen.</strong></p>";
+    header = "<div class='warning'>Hinweis: Übersetzungsfehler oder Ungenauigkeiten möglich. Bitte Eingabe prüfen.</div>";
+  }
+
+  function renderLangBlock(code, title, parts) {
+    const isMain = (code === mainLang);
+    if (!isMain && !showOthers) return "";
+
+    const cls = isMain ? "lang-main" : "lang-secondary " + code;
+    const label = isMain ? title + " (Hauptausgabe)" : title;
+    return `
+      <div class="lang-block">
+        <div class="lang-title">${label}</div>
+        <div class="${cls}">${parts.length ? parts.join(", ") : "-"}</div>
+      </div>
+    `;
   }
 
   const html =
     header +
-    "<h3>Deutsch</h3><p>"   + (deParts.join(", ") || "-") + "</p>" +
-    "<h3>English</h3><p>"   + (enParts.join(", ") || "-") + "</p>" +
-    "<h3>Français</h3><p>"  + (frParts.join(", ") || "-") + "</p>";
+    renderLangBlock("de", "Deutsch",  deParts) +
+    renderLangBlock("en", "English", enParts) +
+    renderLangBlock("fr", "Français", frParts);
 
   document.getElementById('output').innerHTML = html;
 }
