@@ -1016,8 +1016,8 @@ function normalize(str) {
 // Verbesserte numerische Pattern-Erkennung mit Zahlenerhaltung
 function matchNumericPattern(chunk) {
   const t = normalize(chunk);
-  // Regex: Zahl + Leerzeichen + (li|re|k|p)
-  const regex = /(\d+)\s*(li|re|k|p)(?![a-z])/g;
+  // Match: Zahl + optional Leerzeichen + (li|re|k|p)
+  const regex = /(\d+)\s*([likp])(?![a-z])/g;
   let matches = [];
   let m;
   while ((m = regex.exec(t)) !== null) {
@@ -1027,7 +1027,7 @@ function matchNumericPattern(chunk) {
     let entry;
     if (code === "li" || code === "p") {
       entry = dict.find(e => e.deLong === "linke Masche");
-    } else {
+    } else if (code === "k" || code === "re") {
       entry = dict.find(e => e.deLong === "rechte Masche");
     }
     if (!entry) continue;
@@ -1036,6 +1036,7 @@ function matchNumericPattern(chunk) {
   }
   return matches.length ? matches : null;
 }
+
 
 function matchChunkDirect(chunk) {
   const t = normalize(chunk);
@@ -1143,20 +1144,19 @@ function doTranslate(addHistory = true, triggerQuote = true) {
         const count = m.count;
         const e = m.entry;
 
-        // Deutsch
-        const deS = (e.deShort === "re" || e.deShort === "li")
-          ? count + " " + e.deShort
-          : e.deShort;
+        // Deutsch: Zahl + Kurzform
+        const deS = count + " " + e.deShort;
+        // Deutsch: Zahl + Langform (mit Pluralisierung)
         const deL = count + " " + (count === "1"
           ? e.deLong
           : e.deLong.replace("Masche", "Maschen"));
 
-        // Englisch
+        // Englisch: k/p + Zahl
         const baseCode = m.code === "li" || m.code === "p" ? "p" : "k";
         const enS = baseCode + count;
         const enL = count + " " + e.enLong;
 
-        // Französisch
+        // Französisch: Zahl + Kurzform / Zahl + Langform
         const frS = count + " " + e.frShort;
         const frL = count + " " + e.frLong;
 
@@ -1261,6 +1261,7 @@ function doTranslate(addHistory = true, triggerQuote = true) {
 
   saveSession();
 }
+
 
 // Zufällige Beispiele
 function generateRandomExample() {
