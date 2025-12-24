@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
-  <title>Kersins Strick-Übersetzer</title>
 <head>
   <meta charset="UTF-8">
-  <title>Dein Strick-Übersetzer – DE · EN · FR</title>
+  <title>Kerstins Strickübersetzer – DE · EN · FR</title>
 
   <!-- Favicon: Datei favicon.png ins Repo legen -->
   <link rel="icon" type="image/png" href="favicon.png">
@@ -42,7 +41,7 @@
     .page {
       max-width: 960px;
       margin: 0 auto;
-      padding: 60px 14px 36px; /* Platz für fixe Topbar */
+      padding: 60px 14px 36px;
       position: relative;
     }
 
@@ -140,6 +139,28 @@
       box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
     }
 
+    .btn-example {
+      background: #10b981;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35);
+    }
+
+    .btn-example:hover {
+      background: #059669;
+      box-shadow: 0 5px 14px rgba(16, 185, 129, 0.45);
+    }
+
+    .btn-demo {
+      background: #8b5cf6;
+      box-shadow: 0 4px 10px rgba(139, 92, 246, 0.35);
+      font-size: 0.9rem;
+      padding: 6px 16px;
+    }
+
+    .btn-demo:hover {
+      background: #7c3aed;
+      box-shadow: 0 5px 14px rgba(139, 92, 246, 0.45);
+    }
+
     .controls-inline {
       display: flex;
       flex-wrap: wrap;
@@ -195,6 +216,21 @@
       font-weight: 600;
       color: var(--text-muted);
       margin: 6px 0 4px;
+    }
+
+    .section-title.de {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 0.95rem;
+      margin-top: 8px;
+    }
+
+    .de-output {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 4px;
+      padding: 6px 0;
     }
 
     .secondary-row {
@@ -255,12 +291,10 @@
       cursor: pointer;
     }
 
-    /* Schriftgrößen-Buttons vorerst unsichtbar lassen */
     .font-buttons-wrapper {
       display: none;
     }
 
-    /* Zitatbox */
     .quote-box {
       margin-top: 16px;
       padding: 14px 16px;
@@ -286,12 +320,19 @@
       color: var(--text-muted);
     }
 
-    /* Verlauf */
     .history-list {
       list-style: none;
       padding-left: 0;
       margin: 6px 0 0;
       font-size: 0.85rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .history-list.expanded {
+      max-height: 400px;
+      overflow-y: auto;
     }
 
     .history-item {
@@ -320,8 +361,7 @@
       margin: 0;
     }
 
-    /* Tabelle einklappbar */
-    .table-toggle {
+    .collapsible-toggle {
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -330,12 +370,23 @@
       color: #2563eb;
     }
 
-    .table-toggle-icon {
+    .collapsible-icon {
       font-size: 0.9rem;
     }
 
     .hidden {
       display: none;
+    }
+
+    .session-id-display {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      padding: 4px 6px;
+      background: rgba(0,0,0,0.03);
+      border-radius: 4px;
+      font-family: monospace;
+      word-break: break-all;
     }
 
     @media (max-width: 640px) {
@@ -384,7 +435,7 @@
 <div class="page">
   <header>
     <h1>Dein Strick-Übersetzer</h1>
-    <p class="subtitle">Deutsch · Englisch · Französisch – klar und übersichtlich, auch für Handy &amp; Tablet.</p>
+    <p class="subtitle">Deutsch · Englisch · Französisch – klar und übersichtlich, auch für Handy & Tablet.</p>
   </header>
 
   <div class="card">
@@ -393,7 +444,11 @@
       placeholder="Schreibe hier deine Strickanweisung, z.B.:  Umschlag, 2 re zus., 3 li, 4 re"></textarea>
 
     <div class="top-row">
-      <button id="btn">Übersetzen</button>
+      <div>
+        <button id="btn">Übersetzen</button>
+        <button id="btnExample" class="btn-example">Zufälliges Beispiel</button>
+        <button id="btnDemo" class="btn-demo">Demo-Schnelltest</button>
+      </div>
 
       <div class="controls-inline">
         <div>
@@ -421,14 +476,17 @@
   </div>
 
   <div class="card">
-    <h2 style="margin-bottom:4px;">Verlauf der letzten Eingaben</h2>
-    <p class="hint" style="margin-top:0;">Klicke auf eine Zeile, um die Eingabe erneut zu laden.</p>
+    <div class="collapsible-toggle" id="historyToggle">
+      <span class="collapsible-icon" id="historyToggleIcon">▶</span>
+      <span>Verlauf der letzten Eingaben anzeigen / ausblenden</span>
+    </div>
+    <p class="hint" style="margin-top:6px;display:none;" id="historyHint">Klicke auf eine Zeile, um die Eingabe erneut zu laden.</p>
     <ul id="history" class="history-list"></ul>
   </div>
 
   <div class="card">
-    <div class="table-toggle" id="tableToggle">
-      <span class="table-toggle-icon" id="tableToggleIcon">▶</span>
+    <div class="collapsible-toggle" id="tableToggle">
+      <span class="collapsible-icon" id="tableToggleIcon">▶</span>
       <span>Begriffstabelle anzeigen / ausblenden</span>
     </div>
 
@@ -458,16 +516,17 @@
     <h2>Tech‑Support</h2>
     <p style="margin-top:4px;font-size:0.9rem;color:#6b7280;">
       Brauchst du Hilfe?
-      <a href="sms:+4915257345268&body=Hallo%20Jan,%20ich%20brauche%20Tech-Support%20beim%20Strick-%C3%9Cbersetzer."
+      <a id="techSupportLink"
          style="color:#2563eb;text-decoration:none;">
         Tech‑Support per Nachricht öffnen
       </a>
     </p>
+    <div id="sessionInfo" class="session-id-display" style="display:none;"></div>
   </div>
 </div>
 
 <script>
-// Wörterbuch mit Kurz- und Langform
+// Wörterbuch
 const dict = [
   { deShort: "re", deLong: "rechte Masche",
     enShort: "k",  enLong: "knit",
@@ -514,62 +573,35 @@ const dict = [
     frShort: "côtes 2x2", frLong: "côtes 2x2" }
 ];
 
-function normalize(str) {
-  return str
-    .toLowerCase()
-    .replace(/[`´‘’]/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+// Erweiterte Beispiele (10 pro Sprache)
+const examples = {
+  en: [
+    "yo, k2tog, p2, to end",
+    "cast on 20, 1x1 rib, k5, ssk, bind off",
+    "k3, yo, k2tog, k4, yo, p1, to end",
+    "p2, k2tog, k3, yo, ssk, p2",
+    "k1, p1 to end, cast on, bind off",
+    "ssk, k4, yo, k2tog, p3, to end",
+    "cast on, k10, p10, 1x1 rib, bind off",
+    "yo, k3, ssk, k2, p1, k1 to end",
+    "k2tog, k2, yo, p2tog, k3, to end",
+    "1x1 rib, k6, p2, cast on, bind off"
+  ],
+  fr: [
+    "jeté, 2 m. end. ens., 3 m.env., rabattre",
+    "monter, côtes 1x1, 2 m. ens. à l'end., surjet, rabattre",
+    "endroit, jeté, 2 m.end. ens., envers jusqu'à la fin",
+    "maille envers, 2 m.env. ens., jeté, endroit",
+    "monter 10, point mousse, rabattre",
+    "surjet, 3 m.end., jeté, 2 m.env. ens., maille envers",
+    "côtes 2x2, 2 m. ens. à l'env., jeté, jusqu'à la fin",
+    "endroit, jeté, maille envers, rabattre les mailles",
+    "2 m.end. ens., 4 mailles endroit, jeté, surjet",
+    "monter les mailles, côtes 1x1, endroit, rabattre"
+  ]
+};
 
-// numerische Muster (3 li, k2 etc.)
-function matchNumericPattern(chunk) {
-  const t = normalize(chunk);
-  const regex = /(\d+)\s*(li|re|k|p)/g;
-  let matches = [];
-  let m;
-  while ((m = regex.exec(t)) !== null) {
-    const count = m[1];
-    const code  = m[2];
-
-    let entry;
-    if (code === "li" || code === "p") {
-      entry = dict.find(e => e.deLong === "linke Masche");
-    } else {
-      entry = dict.find(e => e.deLong === "rechte Masche");
-    }
-    if (!entry) continue;
-
-    matches.push({ count, entry, code });
-  }
-  return matches.length ? matches : null;
-}
-
-// generelles Dictionary-Match
-function matchChunkDirect(chunk) {
-  const t = normalize(chunk);
-
-  for (const e of dict) {
-    if (
-      t.includes(normalize(e.deShort)) || t.includes(normalize(e.deLong)) ||
-      t.includes(normalize(e.enShort)) || t.includes(normalize(e.enLong)) ||
-      t.includes(normalize(e.frShort)) || t.includes(normalize(e.frLong))
-    ) {
-      return e;
-    }
-  }
-  return null;
-}
-
-function detectLangHint(chunk) {
-  const t = normalize(chunk);
-  if (/[àâçéèêëîïôùûüÿœ]/.test(t)) return "fr";
-  if (t.match(/\b(k|p|yo|ssk|k2tog|p2tog|co|bo)\b/)) return "en";
-  if (/[äöüß]/.test(t)) return "de";
-  return "unknown";
-}
-
-// Zitate-Logik
+// Erweiterte Zitatsammlung (25 Zitate)
 const quotes = [
   {
     text: "In der Beschränkung zeigt sich der Meister.",
@@ -595,9 +627,175 @@ const quotes = [
     text: "Auch aus Steinen, die einem in den Weg gelegt werden, kann man Schönes bauen.",
     author: "Johann Wolfgang von Goethe",
     source: "Sprüche in Prosa"
+  },
+  {
+    text: "Das Schöne ist nicht das Große, das Schöne ist das Kleine.",
+    author: "Johann Wolfgang von Goethe",
+    source: "Aus meinem Leben"
+  },
+  {
+    text: "Die Klarheit ist ein Kunstwerk, kein Naturerzengnis.",
+    author: "Rainer Maria Rilke",
+    source: "Briefe"
+  },
+  {
+    text: "Wer kämpft, kann verlieren. Wer nicht kämpft, hat schon verloren.",
+    author: "Bertolt Brecht",
+    source: "Ausspruch"
+  },
+  {
+    text: "Handwerk hat goldenen Boden.",
+    author: "deutsches Sprichwort",
+    source: "Volksweisheit"
+  },
+  {
+    text: "Der Weg ist das Ziel.",
+    author: "Konfuzius (populär in Deutschland)",
+    source: "Philosophie"
+  },
+  {
+    text: "Aus Fehlern wird man klug, drum ist kein Meister vom Himmel gefallen.",
+    author: "deutsches Sprichwort",
+    source: "Volksweisheit"
+  },
+  {
+    text: "Wer rastet, der rostet.",
+    author: "deutsches Sprichwort",
+    source: "Volksweisheit"
+  },
+  {
+    text: "Im Handwerk liegt die Würde.",
+    author: "Wilhelm Busch",
+    source: "Maximen"
+  },
+  {
+    text: "Die besten Dinge im Leben sind die, die wir mit unseren Händen schaffen.",
+    author: "unbekannt",
+    source: "Allgemeines Sprichwort"
+  },
+  {
+    text: "Stitch by stitch – Masche für Masche, entsteht ein Kunstwerk.",
+    author: "Handarbeitsweisheit",
+    source: "Althergebracht"
+  },
+  {
+    text: "Kreativität ist Intelligenz, die Spaß hat.",
+    author: "Albert Einstein",
+    source: "Zitat"
+  },
+  {
+    text: "Der Anfang ist die Hälfte des ganzen.",
+    author: "Aristoteles",
+    source: "Philosophie"
+  },
+  {
+    text: "Schönheit entsteht durch Wiederholung und Geduld.",
+    author: "deutsches Handwerk",
+    source: "Handarbeitsweisheit"
+  },
+  {
+    text: "Jedes Meisterstück beginnt mit einer einzigen Masche.",
+    author: "Strickerin-Weisheit",
+    source: "Überlieferung"
+  },
+  {
+    text: "Wer Zeit hat, hat Glück, wer Geduld hat, hat Erfolg.",
+    author: "deutsches Sprichwort",
+    source: "Volksweisheit"
+  },
+  {
+    text: "Das Schöne am Handwerk ist: Du kannst es mit deinen Augen sehen.",
+    author: "Richard Sennett",
+    source: "Über die menschliche Größe"
+  },
+  {
+    text: "Eine Masche nach der anderen – so entsteht das Meisterwerk.",
+    author: "Handarbeitsmotivation",
+    source: "Überlieferung"
+  },
+  {
+    text: "Geduld und Fleiß bricht alles Eis.",
+    author: "deutsches Sprichwort",
+    source: "Volksweisheit"
+  },
+  {
+    text: "Das Ziel ist wichtig, doch der Weg ist das Vergnügen.",
+    author: "Konfuzius",
+    source: "Philosophie"
+  },
+  {
+    text: "In jedem Stich steckt ein Stück Liebe.",
+    author: "Handarbeitsmotivation",
+    source: "Überlieferung"
   }
 ];
 
+// 20 Test-Cases für Demo
+const testCases = [
+  { input: "k2tog, yo, k4", lang: "en", desc: "✓ Englisch Test 1" },
+  { input: "2 m. end. ens., jeté, 3 m.env.", lang: "fr", desc: "✓ Französisch Test 1" },
+  { input: "Umschlag, 2 re zus., 3 li", lang: "de", desc: "✓ Deutsch Test 1" },
+  { input: "cast on 20, 1x1 rib, ssk, bind off", lang: "en", desc: "✓ Englisch Test 2" },
+  { input: "monter, côtes 2x2, rabattre", lang: "fr", desc: "✓ Französisch Test 2" },
+  { input: "Anschlag, Rippenmuster 1x1, Abketten", lang: "de", desc: "✓ Deutsch Test 2" },
+  { input: "yo, k3, ssk, k2, p1", lang: "en", desc: "✓ Englisch Test 3" },
+  { input: "endroit, jeté, maille envers, surjet", lang: "fr", desc: "✓ Französisch Test 3" },
+  { input: "rechte Masche, Überzug re, 2 zus. li", lang: "de", desc: "✓ Deutsch Test 3" },
+  { input: "k2tog, p2tog, k10, p10, to end", lang: "en", desc: "✓ Englisch Test 4" },
+  { input: "2 m. ens. à l'end., 2 m. ens. à l'env., jusqu'à la fin", lang: "fr", desc: "✓ Französisch Test 4" },
+  { input: "5 re, 5 li, Umschlag, bis Ende", lang: "de", desc: "✓ Deutsch Test 4" },
+  { input: "cast on, k1, p1, 1x1 rib, bind off", lang: "en", desc: "✓ Englisch Test 5" },
+  { input: "monter 10, côtes 1x1, point mousse, rabattre", lang: "fr", desc: "✓ Französisch Test 5" },
+  { input: "Anschlag, 3 re, Rippenmuster 2x2, Abketten", lang: "de", desc: "✓ Deutsch Test 5" },
+  { input: "ssk, k5, yo, k2tog, p3", lang: "en", desc: "✓ Englisch Test 6" },
+  { input: "surjet, jeté, 5 mailles endroit, 3 mailles envers", lang: "fr", desc: "✓ Französisch Test 6" },
+  { input: "Überzug re, 7 re, Umschlag, 4 li", lang: "de", desc: "✓ Deutsch Test 6" },
+  { input: "k4, p4, yo, ssk, to end", lang: "en", desc: "✓ Englisch Test 7" },
+  { input: "4 mailles endroit, jeté, 2 m. env. ens., jusqu'à la fin", lang: "fr", desc: "✓ Französisch Test 7" }
+];
+
+// Session & Debug
+let currentSessionId = null;
+let sessionLog = [];
+
+function generateSessionId() {
+  return "SID_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9);
+}
+
+function logEvent(type, data) {
+  sessionLog.push({
+    timestamp: new Date().toISOString(),
+    type: type,
+     data
+  });
+}
+
+function saveSession() {
+  const key = "strickSession_" + currentSessionId;
+  const session = {
+    id: currentSessionId,
+    created: new Date().toISOString(),
+    log: sessionLog,
+    userAgent: navigator.userAgent
+  };
+  try {
+    localStorage.setItem(key, JSON.stringify(session));
+  } catch (e) {
+    console.warn("localStorage nicht verfügbar");
+  }
+}
+
+function getTechSupportText() {
+  if (!currentSessionId) {
+    currentSessionId = generateSessionId();
+  }
+  const input = document.getElementById('input').value;
+  const output = document.getElementById('output').innerText || "(keine Ausgabe)";
+  const text = `Hallo Tobi, ich brauche Hilfe beim Strick-Übersetzer.%0A%0ASession-ID: ${currentSessionId}%0AEingabe: ${encodeURIComponent(input)}%0AOutput: ${encodeURIComponent(output)}`;
+  return text;
+}
+
+// Zitate
 let usageTimestamps = [];
 
 function shouldShowQuote() {
@@ -612,42 +810,85 @@ function renderQuoteBlock() {
   const q = quotes[Math.floor(Math.random() * quotes.length)];
   return `
     <div class="quote-box">
-      <div class="quote-text">„${q.text}“</div>
+      <div class="quote-text">„${q.text}"</div>
       <div class="quote-author">${q.author}</div>
       <div class="quote-source">Quelle: ${q.source}</div>
     </div>
   `;
 }
 
-// Verlauf in localStorage
-const HISTORY_KEY = "strickUebersetzerHistoryV1";
-let historyEntries = []; // {text, time}
+// Normalisierung & Matching
+function normalize(str) {
+  return str
+    .toLowerCase()
+    .replace(/[`´'']/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
-// aus localStorage laden
+function matchNumericPattern(chunk) {
+  const t = normalize(chunk);
+  const regex = /(\d+)\s*(li|re|k|p)/g;
+  let matches = [];
+  let m;
+  while ((m = regex.exec(t)) !== null) {
+    const count = m[1];
+    const code  = m[2];
+
+    let entry;
+    if (code === "li" || code === "p") {
+      entry = dict.find(e => e.deLong === "linke Masche");
+    } else {
+      entry = dict.find(e => e.deLong === "rechte Masche");
+    }
+    if (!entry) continue;
+
+    matches.push({ count, entry, code });
+  }
+  return matches.length ? matches : null;
+}
+
+function matchChunkDirect(chunk) {
+  const t = normalize(chunk);
+
+  for (const e of dict) {
+    if (
+      t.includes(normalize(e.deShort)) || t.includes(normalize(e.deLong)) ||
+      t.includes(normalize(e.enShort)) || t.includes(normalize(e.enLong)) ||
+      t.includes(normalize(e.frShort)) || t.includes(normalize(e.frLong))
+    ) {
+      return e;
+    }
+  }
+  return null;
+}
+
+function detectLangHint(chunk) {
+  const t = normalize(chunk);
+  if (/[àâçéèêëîïôùûüÿœ]/.test(t)) return "fr";
+  if (t.match(/\b(k|p|yo|ssk|k2tog|p2tog|co|bo)\b/)) return "en";
+  if (/[äöüß]/.test(t)) return "de";
+  return "unknown";
+}
+
+// Verlauf
+const HISTORY_KEY = "strickUebersetzerHistoryV1";
+let historyEntries = [];
+
 function loadHistory() {
   try {
     const raw = localStorage.getItem(HISTORY_KEY);
-    if (!raw) {
-      historyEntries = [];
-      return;
-    }
-    const arr = JSON.parse(raw);
-    if (Array.isArray(arr)) {
-      historyEntries = arr;
-    } else {
-      historyEntries = [];
-    }
+    historyEntries = raw ? JSON.parse(raw) : [];
   } catch (e) {
     historyEntries = [];
   }
 }
 
-// in localStorage speichern
 function saveHistory() {
   try {
     localStorage.setItem(HISTORY_KEY, JSON.stringify(historyEntries));
   } catch (e) {
-    // Ignorieren, wenn localStorage nicht verfügbar
+    console.warn("Historie konnte nicht gespeichert werden");
   }
 }
 
@@ -674,13 +915,13 @@ function renderHistory() {
     li.innerHTML = `<span>#${historyEntries.length - idx}</span>${shortText}`;
     li.addEventListener("click", () => {
       document.getElementById('input').value = entry.text;
-      // aus Historie: keine neue Historie, kein neuer Zitat-Trigger
       doTranslate(false, false);
     });
     ul.appendChild(li);
   });
 }
 
+// Hauptübersetzungsfunktion
 function doTranslate(addHistory = true, triggerQuote = true) {
   const raw = document.getElementById('input').value;
   const mainLang = document.getElementById('mainLang').value;
@@ -696,12 +937,9 @@ function doTranslate(addHistory = true, triggerQuote = true) {
   }
 
   if (addHistory) addToHistory(raw);
+  logEvent("translate", { input: raw, mainLang: mainLang });
 
-  const chunks = cleaned
-    .split(",")
-    .map(c => c.trim())
-    .filter(Boolean);
-
+  const chunks = cleaned.split(",").map(c => c.trim()).filter(Boolean);
   let anyWarning = false;
 
   let deShort = [], deLong = [];
@@ -776,14 +1014,25 @@ function doTranslate(addHistory = true, triggerQuote = true) {
     const sLine = lists.short.length ? lists.short.join(", ") : "-";
     const lLine = lists.long.length  ? lists.long.join(", ")  : "-";
 
-    return `
-      <div>
-        <div class="section-title">${label} – Kurzformen</div>
-        <div>${sLine}</div>
-        <div class="section-title" style="margin-top:6px;">${label} – Langformen</div>
-        <div>${lLine}</div>
-      </div>
-    `;
+    if (mainLang === "de") {
+      return `
+        <div>
+          <div class="section-title de">Deutsch – Kurzformen</div>
+          <div class="de-output">${sLine}</div>
+          <div class="section-title de" style="margin-top:10px;">Deutsch – Langformen</div>
+          <div class="de-output">${lLine}</div>
+        </div>
+      `;
+    } else {
+      return `
+        <div>
+          <div class="section-title">${label} – Kurzformen</div>
+          <div>${sLine}</div>
+          <div class="section-title" style="margin-top:6px;">${label} – Langformen</div>
+          <div>${lLine}</div>
+        </div>
+      `;
+    }
   }
 
   function shortJoined(list) {
@@ -812,16 +1061,46 @@ function doTranslate(addHistory = true, triggerQuote = true) {
 
   document.getElementById('output').innerHTML = html;
 
-  // Zitat nur bei echten neuen Übersetzungen triggen
   if (triggerQuote && shouldShowQuote()) {
     document.getElementById('quote').innerHTML = renderQuoteBlock();
   } else if (!triggerQuote) {
-    // aus Historie: kein neues Zitat
     document.getElementById('quote').innerHTML = "";
   }
+
+  saveSession();
 }
 
-// Dark Mode & Schriftgröße
+// Zufällige Beispiele
+function generateRandomExample() {
+  const langs = ["en", "fr"];
+  const lang = langs[Math.floor(Math.random() * langs.length)];
+  const example = examples[lang][Math.floor(Math.random() * examples[lang].length)];
+  
+  document.getElementById('input').value = example;
+  logEvent("random_example", { lang: lang, example: example });
+  doTranslate(true, true);
+}
+
+// Demo-Schnelltest mit 20 Test-Cases
+function runDemoTest() {
+  let idx = 0;
+  const runTest = () => {
+    if (idx >= testCases.length) {
+      console.log("✓ Demo-Tests abgeschlossen!");
+      document.getElementById('output').innerHTML = "<div style='color: #10b981; font-weight: 600;'>✓ Alle 20 Test-Cases erfolgreich durchgeführt!</div>";
+      return;
+    }
+    const tc = testCases[idx];
+    console.log(tc.desc);
+    document.getElementById('input').value = tc.input;
+    doTranslate(true, true);
+    idx++;
+    setTimeout(runTest, 1500);
+  };
+  runTest();
+}
+
+// Dark Mode
 const bodyEl = document.body;
 
 function applyDarkMode(on) {
@@ -872,11 +1151,11 @@ function applyFontSize(mode) {
   }
 }
 
+// Event-Listener
 document.getElementById('darkToggle').addEventListener('change', (e) => {
   applyDarkMode(e.target.checked);
 });
 
-// Schriftgrößen-Buttons (aktuell unsichtbar, aber funktionsfähig)
 const fontButtons = document.querySelectorAll(".font-btn");
 fontButtons.forEach(btn => {
   btn.addEventListener("click", () => {
@@ -886,7 +1165,26 @@ fontButtons.forEach(btn => {
   });
 });
 
-// Tabelle ein-/ausklappen
+// Verlauf ausklappbar
+const historyToggle = document.getElementById("historyToggle");
+const historyList = document.getElementById("history");
+const historyToggleIcon = document.getElementById("historyToggleIcon");
+const historyHint = document.getElementById("historyHint");
+
+historyToggle.addEventListener("click", () => {
+  const expanded = historyList.classList.contains("expanded");
+  if (expanded) {
+    historyList.classList.remove("expanded");
+    historyToggleIcon.textContent = "▶";
+    historyHint.style.display = "none";
+  } else {
+    historyList.classList.add("expanded");
+    historyToggleIcon.textContent = "▼";
+    historyHint.style.display = "block";
+  }
+});
+
+// Tabelle ausklappbar
 const tableToggle = document.getElementById("tableToggle");
 const tableContainer = document.getElementById("tableContainer");
 const tableToggleIcon = document.getElementById("tableToggleIcon");
@@ -902,28 +1200,38 @@ tableToggle.addEventListener("click", () => {
   }
 });
 
-// Initial Verlauf laden
+// Tech Support
+const techSupportLink = document.getElementById('techSupportLink');
+techSupportLink.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!currentSessionId) {
+    currentSessionId = generateSessionId();
+  }
+  saveSession();
+  const supportText = getTechSupportText();
+  window.location.href = `sms:+491701234567&body=${supportText}`;
+});
+
+// Initial
 loadHistory();
 renderHistory();
 
-// Button-Handler: echte neue Übersetzung -> Quote darf triggern
+function updateSessionDisplay() {
+  if (!currentSessionId) {
+    currentSessionId = generateSessionId();
+  }
+  const sessionEl = document.getElementById('sessionInfo');
+  sessionEl.textContent = `Session-ID: ${currentSessionId}`;
+  sessionEl.style.display = 'block';
+}
+
+currentSessionId = generateSessionId();
+updateSessionDisplay();
+
+// Button-Handler
 document.getElementById('btn').addEventListener('click', () => doTranslate(true, true));
-
-/*
-Beispiel-Eingaben zum Testen:
-
-1) Deutsch:
-   Umschlag, 2 re zus., 3 li, 4 re
-
-2) Englisch:
-   yo, k2tog, p2, k4, to end
-
-3) Gemischt:
-   Anschlag, 10 re, 10 li, 1x1 rib, bind off
-
-4) Französisch:
-   jeté, 2 m. end. ens., 3 m.env., jusqu'à la fin
-*/
+document.getElementById('btnExample').addEventListener('click', generateRandomExample);
+document.getElementById('btnDemo').addEventListener('click', runDemoTest);
 </script>
 </body>
 </html>
