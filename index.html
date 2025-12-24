@@ -1143,7 +1143,7 @@ function doTranslate(addHistory = true, triggerQuote = true) {
         const count = m.count;
         const e = m.entry;
 
-        // Zahlen mit Abkürzungen kombinieren
+        // Deutsch
         const deS = (e.deShort === "re" || e.deShort === "li")
           ? count + " " + e.deShort
           : e.deShort;
@@ -1151,10 +1151,12 @@ function doTranslate(addHistory = true, triggerQuote = true) {
           ? e.deLong
           : e.deLong.replace("Masche", "Maschen"));
 
+        // Englisch
         const baseCode = m.code === "li" || m.code === "p" ? "p" : "k";
         const enS = baseCode + count;
         const enL = count + " " + e.enLong;
 
+        // Französisch
         const frS = count + " " + e.frShort;
         const frL = count + " " + e.frLong;
 
