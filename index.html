@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="de">
-<head><title>Strick-Übersetzer Mama</title></head>
+<head><title>Kerstins Strick-Dolmetscher</title></head>
 <body>
-<h1>Strick-Übersetzer: DE ↔ EN ↔ FR</h1>
+<h1>Frohe Weihnachten 2025 – Dein Strick-Übersetzer: DE ↔ EN ↔ FR</h1>
 
 <!-- Eingabe -->
 <p><strong>Eingabe:</strong></p>
 <textarea id="input" rows="3" cols="60"
-  placeholder="z.B.: p1, k1 to end"></textarea><br>
+  placeholder="z.B.: p1, k1 to end oder 1 li, 1 re bis Ende"></textarea><br>
 <button onclick="translate()">Übersetzen</button>
 
 <!-- Ausgabe -->
@@ -16,20 +16,35 @@
 
 <hr>
 
-<!-- Deine bisherige Tabelle kann hier drunter bleiben -->
+<!-- Übersetzungstabelle immer sichtbar -->
+<h2>Übersicht: Begriffe Deutsch / Englisch / Französisch</h2>
+<table border="1" style="border-collapse:collapse;font-family:Arial;">
+<tr><th>Deutsch</th><th>Englisch (US/UK)</th><th>Französisch</th><th>Bedeutung</th></tr>
+<tr><td>rechts / re</td><td>knit / k</td><td>endroit / end. / m.end.</td><td>Rechte Masche</td></tr>
+<tr><td>links / li</td><td>purl / p</td><td>envers / env. / m.env.</td><td>Linke Masche</td></tr>
+<tr><td>zusammen / zus.</td><td>together / tog</td><td>ensemble / ens.</td><td>Zusammenstricken</td></tr>
+<tr><td>Umschlag / U</td><td>yarn over / yo</td><td>jeté / j</td><td>Umschlag</td></tr>
+<tr><td>2 re zus.</td><td>k2tog</td><td>2 m. ens. à l'end.</td><td>2 zusammen rechts</td></tr>
+<tr><td>2 li zus.</td><td>p2tog</td><td>2 m. ens. à l'env.</td><td>2 zusammen links</td></tr>
+<tr><td>bis Ende</td><td>to end</td><td>jusqu'à la fin</td><td>Bis Reihenende</td></tr>
+<tr><td>Rippenmuster 1x1</td><td>1x1 rib</td><td>côtes 1x1</td><td>Abwechselnd 1 li, 1 re</td></tr>
+<tr><td>Anschlag</td><td>cast on</td><td>monter</td><td>Maschen anschlagen</td></tr>
+<tr><td>Abketten</td><td>bind off</td><td>rabattre</td><td>Maschen abketten</td></tr>
+</table>
 
 <script>
-// Sehr einfache Wort-Liste – kann beliebig erweitert werden
+// Wort-Liste – kann erweitert werden
 const dict = [
-  { de: "1 li, 1 re bis Ende", en: "p1, k1 to end", fr: "1 m.env., 1 m.end. jusqu'à la fin" },
-  { de: "rechte Masche",        en: "knit",          fr: "maille endroit" },
-  { de: "linke Masche",         en: "purl",          fr: "maille envers" },
-  { de: "Umschlag",             en: "yarn over",     fr: "jeté" },
+  { de: "1 li, 1 re bis ende", en: "p1, k1 to end", fr: "1 m.env., 1 m.end. jusqu'à la fin" },
+  { de: "rechte masche",        en: "knit",          fr: "maille endroit" },
+  { de: "linke masche",         en: "purl",          fr: "maille envers" },
+  { de: "umschlag",             en: "yarn over",     fr: "jeté" },
+  { de: "2 re zus.",            en: "k2tog",         fr: "2 m. ens. à l'end." },
+  { de: "2 li zus.",            en: "p2tog",         fr: "2 m. ens. à l'env." },
   { de: "abketten",             en: "bind off",      fr: "rabattre" },
   { de: "anschlagen",           en: "cast on",       fr: "monter" }
 ];
 
-// sehr einfache Heuristik: versuche, bekannte Phrasen zu finden
 function translate() {
   const text = document.getElementById('input').value.toLowerCase();
   let result = "Keine direkte Übersetzung gefunden – bitte genaueren Begriff eingeben.";
