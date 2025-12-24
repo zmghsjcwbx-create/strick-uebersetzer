@@ -2,21 +2,23 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Frohe Weihnachten 2025 – Dein Strick-Übersetzer</title>
+  <title>Dein Strick-Übersetzer – DE · EN · FR</title>
 
   <!-- Favicon: Datei favicon.png ins Repo legen -->
   <link rel="icon" type="image/png" href="favicon.png">
 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
     :root {
-      --bg: #f7f7fb;
+      --bg: #f5f7fb;
       --card-bg: #ffffff;
-      --accent: #4b6cff;
-      --accent-light: #e0e6ff;
-      --text-main: #222222;
-      --text-muted: #555555;
-      --border: #dddddd;
-      --danger: #c0392b;
+      --accent: #3662ff;
+      --accent-soft: #e2e8ff;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #b91c1c;
       --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
@@ -26,59 +28,82 @@
       margin: 0;
       padding: 0;
       font-family: var(--font);
-      background: radial-gradient(circle at top left, #fdf2ff 0, #f7f7fb 40%, #eef4ff 100%);
+      background: var(--bg);
       color: var(--text-main);
+      font-size: 100%;
     }
 
     .page {
       max-width: 960px;
       margin: 0 auto;
-      padding: 24px 16px 40px;
+      padding: 20px 14px 36px;
+      position: relative;
+    }
+
+    header {
+      margin-bottom: 20px;
     }
 
     h1 {
-      margin-top: 0;
-      font-size: 1.9rem;
+      margin: 0;
+      font-size: 1.8rem;
       text-align: center;
-      color: var(--accent);
+      font-weight: 650;
+      letter-spacing: -0.02em;
     }
 
     .subtitle {
+      margin-top: 6px;
       text-align: center;
       color: var(--text-muted);
-      margin-bottom: 24px;
+      font-size: 0.9rem;
     }
 
     .card {
       background: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
-      padding: 20px 20px 24px;
-      margin-bottom: 20px;
-      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 18px;
+      padding: 18px 18px 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      margin-bottom: 18px;
     }
 
     label {
+      font-size: 0.9rem;
       font-weight: 600;
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+      color: var(--text-muted);
     }
 
     textarea {
       width: 100%;
-      border-radius: 8px;
-      padding: 10px 12px;
+      border-radius: 12px;
+      padding: 12px 14px;
       border: 1px solid var(--border);
       font-family: Menlo, "SF Mono", Consolas, monospace;
       font-size: 0.95rem;
       resize: vertical;
-      min-height: 70px;
+      min-height: 110px;
+    }
+
+    textarea::placeholder {
+      color: #9ca3af;
     }
 
     textarea:focus, select:focus {
       outline: none;
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-light);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .top-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+      justify-content: space-between;
     }
 
     button {
@@ -86,30 +111,23 @@
       color: #ffffff;
       border: none;
       border-radius: 999px;
-      padding: 8px 20px;
+      padding: 8px 22px;
       font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 10px;
+      white-space: nowrap;
     }
 
     button:hover {
-      background: #3c57d4;
+      background: #2746c9;
     }
 
-    .controls {
+    .controls-inline {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px 20px;
+      gap: 10px 16px;
       align-items: center;
-      margin-top: 8px;
-    }
-
-    .controls-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
     }
 
@@ -118,198 +136,263 @@
       border-radius: 999px;
       border: 1px solid var(--border);
       background: #fff;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     .checkbox-label {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       cursor: pointer;
     }
 
+    .hint {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
     .output {
-      border-radius: 10px;
+      margin-top: 14px;
+      border-radius: 14px;
       border: 1px solid var(--border);
-      padding: 12px 14px 10px;
-      background: #fafafa;
+      background: #f9fafb;
+      padding: 10px 12px 12px;
       min-height: 40px;
-      font-size: 0.95rem;
+      font-size: 0.93rem;
     }
 
     .warning {
       color: var(--danger);
       font-weight: 600;
-      margin-bottom: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
     }
 
-    .lang-block {
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin: 6px 0 4px;
+    }
+
+    .main-list {
+      margin: 0;
+      padding-left: 18px;
+      line-height: 1.5;
+    }
+
+    .secondary-row {
+      font-size: 0.85rem;
+      color: var(--text-muted);
       margin-top: 8px;
     }
 
-    .lang-title {
-      font-weight: 700;
-      margin-bottom: 4px;
-      color: var(--text-muted);
-      font-size: 0.9rem;
+    .secondary-label {
+      font-weight: 600;
+      margin-right: 4px;
     }
 
-    .lang-main {
-      font-size: 1.05rem;
-      padding: 8px 10px;
-      border-radius: 8px;
-      background: #ffffff;
-      border: 1px solid var(--accent-light);
-    }
-
-    .lang-secondary {
-      font-size: 0.9rem;
-      padding: 6px 8px;
-      border-radius: 6px;
-      margin-top: 4px;
-    }
-
-    .lang-secondary.de { background: #fef6f0; }
-    .lang-secondary.en { background: #eef5ff; }
-    .lang-secondary.fr { background: #f4f4ff; }
-
-    .muted {
-      color: var(--text-muted);
+    h2 {
+      font-size: 1rem;
+      margin: 0 0 8px;
     }
 
     table {
-      margin-top: 8px;
       width: 100%;
-      font-size: 0.9rem;
+      border-collapse: collapse;
+      font-size: 0.85rem;
     }
 
     th, td {
-      padding: 4px 6px;
       border: 1px solid var(--border);
+      padding: 4px 6px;
+      vertical-align: top;
     }
 
     th {
-      background: #f1f4ff;
+      background: #eff1ff;
+      font-weight: 600;
+    }
+
+    .top-bar-toggles {
+      position: absolute;
+      right: 14px;
+      top: 10px;
+      display: flex;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      align-items: center;
+    }
+
+    .top-toggle-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.7);
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
     }
 
     @media (max-width: 640px) {
-      .controls {
+      .card {
+        padding: 16px 14px 18px;
+        border-radius: 14px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      .top-row {
         flex-direction: column;
         align-items: flex-start;
       }
-      h1 {
-        font-size: 1.6rem;
+      button {
+        width: 100%;
+        text-align: center;
+      }
+      .top-bar-toggles {
+        position: static;
+        justify-content: flex-end;
+        margin-bottom: 6px;
       }
     }
   </style>
 </head>
 <body>
 <div class="page">
-  <h1>Frohe Weihnachten 2025 – Dein Strick-Übersetzer</h1>
-  <p class="subtitle">Strickanweisungen zwischen Deutsch, Englisch und Französisch schnell übersetzen.</p>
+
+  <!-- Dark Mode & Schriftgröße -->
+  <div class="top-bar-toggles">
+    <label class="top-toggle-label">
+      <input type="checkbox" id="darkToggle">
+      Dark&nbsp;Mode
+    </label>
+    <label class="top-toggle-label">
+      Schrift:
+      <select id="fontSizeToggle">
+        <option value="normal">Normal</option>
+        <option value="large">Groß</option>
+        <option value="xlarge">Sehr groß</option>
+      </select>
+    </label>
+  </div>
+
+  <header>
+    <h1>Dein Strick-Übersetzer</h1>
+    <p class="subtitle">Deutsch · Englisch · Französisch – klar und übersichtlich, auch für Handy &amp; Tablet.</p>
+  </header>
 
   <div class="card">
     <label for="input">Eingabe</label>
     <textarea id="input"
-      placeholder="Beispiele:&#10;• Umschlag, 2 re zus., 3 li, 4 re&#10;• p1, k1 to end&#10;• jeté, 2 m. ens. à l'end., bind off"></textarea>
+      placeholder="Schreibe hier deine Strickanweisung, z.B.:  Umschlag, 2 re zus., 3 li, 4 re"></textarea>
 
-    <div class="controls">
+    <div class="top-row">
       <button id="btn">Übersetzen</button>
 
-      <div class="controls-group">
-        <span class="muted">Hauptausgabe:</span>
-        <select id="mainLang">
-          <option value="de">Deutsch</option>
-          <option value="en">English</option>
-          <option value="fr">Français</option>
-        </select>
-      </div>
+      <div class="controls-inline">
+        <div>
+          Hauptausgabe:
+          <select id="mainLang">
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
+            <option value="fr">Français</option>
+          </select>
+        </div>
 
-      <div class="controls-group">
         <label class="checkbox-label">
           <input type="checkbox" id="showOthers" checked>
-          <span>Andere Sprachen anzeigen</span>
+          Andere Sprachen kurz anzeigen
         </label>
       </div>
     </div>
 
-    <p style="margin-top: 16px; font-size:0.85rem;" class="muted">
-      In der Hauptsprache werden, soweit möglich, Kurz- und Langform angezeigt
-      (z.&nbsp;B. „k2tog – 2 zusammen rechts“).
+    <p class="hint">
+      Die Hauptsprache zeigt zuerst alle Kurzformen (Abkürzungen), danach die Langformen als Liste.
     </p>
 
     <div id="output" class="output"></div>
   </div>
 
   <div class="card">
-    <h2 style="margin-top:0;font-size:1.1rem;">Übersicht: Begriffe Deutsch / Englisch / Französisch</h2>
+    <h2>Übersicht: Begriffe Deutsch / Englisch / Französisch</h2>
     <table>
-      <tr><th>Deutsch</th><th>Englisch (US/UK)</th><th>Französisch</th><th>Bedeutung</th></tr>
-      <tr><td>rechts / re</td><td>knit / k</td><td>endroit / end. / m.end.</td><td>Rechte Masche</td></tr>
-      <tr><td>links / li</td><td>purl / p</td><td>envers / env. / m.env.</td><td>Linke Masche</td></tr>
-      <tr><td>zusammen / zus.</td><td>together / tog</td><td>ensemble / ens.</td><td>Zusammenstricken</td></tr>
-      <tr><td>Umschlag / U</td><td>yarn over / yo</td><td>jeté / j</td><td>Umschlag</td></tr>
-      <tr><td>2 re zus.</td><td>k2tog</td><td>2 m. ens. à l'end.</td><td>2 zusammen rechts</td></tr>
-      <tr><td>2 li zus.</td><td>p2tog</td><td>2 m. ens. à l'env.</td><td>2 zusammen links</td></tr>
-      <tr><td>bis Ende</td><td>to end</td><td>jusqu'à la fin</td><td>Bis Reihenende</td></tr>
-      <tr><td>Rippenmuster 1x1</td><td>1x1 rib</td><td>côtes 1x1</td><td>Abwechselnd 1 li, 1 re</td></tr>
-      <tr><td>Anschlag</td><td>cast on</td><td>monter</td><td>Maschen anschlagen</td></tr>
-      <tr><td>Abketten</td><td>bind off</td><td>rabattre</td><td>Maschen abketten</td></tr>
+      <tr><th>Deutsch</th><th>Englisch (US/UK)</th><th>Französisch</th><th>Hinweis</th></tr>
+      <tr><td>rechte Masche (re)</td><td>knit (k)</td><td>maille endroit (m.end.)</td><td>Grundmasche rechts</td></tr>
+      <tr><td>linke Masche (li)</td><td>purl (p)</td><td>maille envers (m.env.)</td><td>Grundmasche links</td></tr>
+      <tr><td>Umschlag (U)</td><td>yarn over (yo)</td><td>jeté</td><td>Loch / Zunahme über Fadenumschlag</td></tr>
+      <tr><td>2 zus. re</td><td>k2tog</td><td>2 m. end. ens.</td><td>2 Maschen rechts zusammenstricken</td></tr>
+      <tr><td>2 zus. li</td><td>p2tog</td><td>2 m. env. ens.</td><td>2 Maschen links zusammenstricken</td></tr>
+      <tr><td>Überzug re</td><td>ssk</td><td>surjet simple</td><td>schräge Abnahme nach links</td></tr>
+      <tr><td>Anschlag</td><td>cast on (CO)</td><td>monter</td><td>Maschen neu anschlagen</td></tr>
+      <tr><td>Abketten</td><td>bind off (BO)</td><td>rabattre</td><td>Maschen elastisch beenden</td></tr>
+      <tr><td>bis Ende</td><td>to end</td><td>jusqu'à la fin</td><td>bis zum Reihenende fortsetzen</td></tr>
+      <tr><td>Rippenmuster 1x1</td><td>1x1 rib</td><td>côtes 1x1</td><td>abwechselnd 1 re, 1 li</td></tr>
+      <tr><td>Rippenmuster 2x2</td><td>2x2 rib</td><td>côtes 2x2</td><td>2 re, 2 li im Wechsel</td></tr>
+      <tr><td>kraus rechts</td><td>garter stitch</td><td>point mousse</td><td>in allen Reihen rechts</td></tr>
+      <tr><td>glatt rechts</td><td>stocking stitch</td><td>jersey endroit</td><td>Vorderseite rechts, Rückseite links</td></tr>
+      <tr><td>Perlmuster</td><td>moss stitch</td><td>point de riz</td><td>abwechselnd re/li, versetzt in der Höhe</td></tr>
     </table>
+
+    <p style="margin-top:10px;font-size:0.85rem;color:#6b7280;">
+      Brauchst du Hilfe?
+      <a href="sms:+4915257345268&body=Hallo%20Jan,%20ich%20brauche%20Tech-Support%20beim%20Strick-%C3%9Cbersetzer."
+         style="color:#2563eb;text-decoration:none;">
+        Tech‑Support per Nachricht öffnen
+      </a>
+    </p>
   </div>
 </div>
 
 <script>
-// Wörterbuch: Kurz- & Langformen
+// Wörterbuch mit Kurz- und Langform
 const dict = [
-  // Grundmaschen
-  { deShort: "re",           deLong: "rechte Masche",
-    enShort: "k",            enLong: "knit",
-    frShort: "m.end.",       frLong: "maille endroit" },
+  { deShort: "re", deLong: "rechte Masche",
+    enShort: "k",  enLong: "knit",
+    frShort: "m.end.", frLong: "maille endroit" },
 
-  { deShort: "li",           deLong: "linke Masche",
-    enShort: "p",            enLong: "purl",
-    frShort: "m.env.",       frLong: "maille envers" },
+  { deShort: "li", deLong: "linke Masche",
+    enShort: "p",  enLong: "purl",
+    frShort: "m.env.", frLong: "maille envers" },
 
-  // Feste Reihen
-  { deShort: "1 li, 1 re bis ende", deLong: "Rippenmuster 1x1",
-    enShort: "p1, k1 to end",       enLong: "1x1 rib",
-    frShort: "1 m.env., 1 m.end. jusqu'à la fin", frLong: "côtes 1x1" },
+  { deShort: "umschlag", deLong: "Umschlag",
+    enShort: "yo",       enLong: "yarn over",
+    frShort: "jeté",     frLong: "jeté" },
 
-  // Umschlag / Zunahmen
-  { deShort: "umschlag",     deLong: "Umschlag",
-    enShort: "yo",           enLong: "yarn over",
-    frShort: "jeté",         frLong: "jeté" },
-
-  { deShort: "zunahme",      deLong: "Zunahme",
-    enShort: "inc",          enLong: "increase",
-    frShort: "augm.",        frLong: "augmentation" },
-
-  // Abnahmen
-  { deShort: "2 zus. re",    deLong: "2 zusammen rechts",
-    enShort: "k2tog",        enLong: "knit 2 together",
+  { deShort: "2 zus. re", deLong: "2 zusammen rechts",
+    enShort: "k2tog",     enLong: "knit 2 together",
     frShort: "2 m. end. ens.", frLong: "2 mailles ensemble à l'endroit" },
 
-  { deShort: "2 zus. li",    deLong: "2 zusammen links",
-    enShort: "p2tog",        enLong: "purl 2 together",
+  { deShort: "2 zus. li", deLong: "2 zusammen links",
+    enShort: "p2tog",     enLong: "purl 2 together",
     frShort: "2 m. env. ens.", frLong: "2 mailles ensemble à l'envers" },
 
-  { deShort: "überzug re",   deLong: "Überzug rechts",
-    enShort: "ssk",          enLong: "slip, slip, knit",
-    frShort: "surjet",       frLong: "surjet simple à l'endroit" },
+  { deShort: "überzug re", deLong: "Überzug rechts",
+    enShort: "ssk",       enLong: "slip, slip, knit",
+    frShort: "surjet",    frLong: "surjet simple à l'endroit" },
 
-  // Randfunktionen
-  { deShort: "anschlagen",   deLong: "Maschen anschlagen",
-    enShort: "CO",           enLong: "cast on",
-    frShort: "monter",       frLong: "monter les mailles" },
+  { deShort: "anschlag",  deLong: "Maschen anschlagen",
+    enShort: "CO",        enLong: "cast on",
+    frShort: "monter",    frLong: "monter les mailles" },
 
-  { deShort: "abketten",     deLong: "Maschen abketten",
-    enShort: "BO",           enLong: "bind off",
-    frShort: "rabattre",     frLong: "rabattre les mailles" },
+  { deShort: "abketten",  deLong: "Maschen abketten",
+    enShort: "BO",        enLong: "bind off",
+    frShort: "rabattre",  frLong: "rabattre les mailles" },
 
-  { deShort: "bis ende",     deLong: "bis Reihenende",
-    enShort: "to end",       enLong: "to the end of row",
-    frShort: "jusqu'à la fin", frLong: "jusqu'à la fin du rang" }
+  { deShort: "bis ende",  deLong: "bis Reihenende",
+    enShort: "to end",    enLong: "to the end of row",
+    frShort: "jusqu'à la fin", frLong: "jusqu'à la fin du rang" },
+
+  { deShort: "rippen 1x1", deLong: "Rippenmuster 1x1",
+    enShort: "1x1 rib",   enLong: "1x1 rib",
+    frShort: "côtes 1x1", frLong: "côtes 1x1" },
+
+  { deShort: "rippen 2x2", deLong: "Rippenmuster 2x2",
+    enShort: "2x2 rib",   enLong: "2x2 rib",
+    frShort: "côtes 2x2", frLong: "côtes 2x2" }
 ];
 
 function normalize(str) {
@@ -338,7 +421,7 @@ function matchNumericPattern(chunk) {
     }
     if (!entry) continue;
 
-    matches.push({ count, entry });
+    matches.push({ count, entry, code });
   }
   return matches.length ? matches : null;
 }
@@ -362,7 +445,7 @@ function matchChunkDirect(chunk) {
 function detectLangHint(chunk) {
   const t = normalize(chunk);
   if (/[àâçéèêëîïôùûüÿœ]/.test(t)) return "fr";
-  if (t.match(/\b(k|p|yo|ssk|k2tog|p2tog|m1|co|bo)\b/)) return "en";
+  if (t.match(/\b(k|p|yo|ssk|k2tog|p2tog|co|bo)\b/)) return "en";
   if (/[äöüß]/.test(t)) return "de";
   return "unknown";
 }
@@ -387,10 +470,10 @@ function doTranslate() {
 
   let anyWarning = false;
 
-  // pro Sprache Liste von Strings (Kurz – Lang)
-  let deParts = [];
-  let enParts = [];
-  let frParts = [];
+  // pro Sprache Kurz- und Langlisten
+  let deShort = [], deLong = [];
+  let enShort = [], enLong = [];
+  let frShort = [], frLong = [];
 
   for (const chunk of chunks) {
     const numericMatches = matchNumericPattern(chunk);
@@ -400,20 +483,26 @@ function doTranslate() {
         const c = m.count;
         const e = m.entry;
 
-        const deShort = c + " " + (e.deShort === "re" || e.deShort === "li" ? e.deShort : e.deLong);
-        const deLong  = c + " " + (c === "1"
-                          ? e.deLong
-                          : e.deLong.replace("Masche", "Maschen"));
-        const enShort = (e.enShort === "k" || e.enShort === "p")
-                          ? e.enShort + c
-                          : e.enShort;
-        const enLong  = c + " " + e.enLong;
-        const frShort = c + " " + e.frShort;
-        const frLong  = c + " " + e.frLong;
+        const deS = (e.deShort === "re" || e.deShort === "li")
+          ? c + " " + e.deShort
+          : e.deShort;
+        const deL = c + " " + (c === "1"
+          ? e.deLong
+          : e.deLong.replace("Masche", "Maschen"));
 
-        deParts.push(deShort + " – " + deLong);
-        enParts.push(enShort + " – " + enLong);
-        frParts.push(frShort + " – " + frLong);
+        const baseCode = m.code === "li" || m.code === "p" ? "p" : "k";
+        const enS = baseCode + c;
+        const enL = c + " " + e.enLong;
+
+        const frS = c + " " + e.frShort;
+        const frL = c + " " + e.frLong;
+
+        deShort.push(deS);
+        deLong.push(deL);
+        enShort.push(enS);
+        enLong.push(enL);
+        frShort.push(frS);
+        frLong.push(frL);
       });
       continue;
     }
@@ -423,45 +512,116 @@ function doTranslate() {
       const hint = detectLangHint(chunk);
       if (hint !== "unknown" && hint !== "de") anyWarning = true;
 
-      deParts.push(entry.deShort + " – " + entry.deLong);
-      enParts.push(entry.enShort + " – " + entry.enLong);
-      frParts.push(entry.frShort + " – " + entry.frLong);
+      deShort.push(entry.deShort);
+      deLong.push(entry.deLong);
+      enShort.push(entry.enShort);
+      enLong.push(entry.enLong);
+      frShort.push(entry.frShort);
+      frLong.push(entry.frLong);
     } else {
       anyWarning = true;
-      deParts.push("[unbekannt: " + chunk + "]");
-      enParts.push("[unknown: " + chunk + "]");
-      frParts.push("[inconnu: " + chunk + "]");
+      deShort.push("[unbekannt: " + chunk + "]");
+      enShort.push("[unknown: " + chunk + "]");
+      frShort.push("[inconnu: " + chunk + "]");
     }
   }
+
+  function pickLists(lang) {
+    if (lang === "de") return { short: deShort, long: deLong };
+    if (lang === "en") return { short: enShort, long: enLong };
+    return { short: frShort, long: frLong };
+  }
+
+  const main = pickLists(mainLang);
 
   let header = "";
   if (anyWarning) {
     header = "<div class='warning'>Hinweis: Übersetzungsfehler oder Ungenauigkeiten möglich. Bitte Eingabe prüfen.</div>";
   }
 
-  function renderLangBlock(code, title, parts) {
-    const isMain = (code === mainLang);
-    if (!isMain && !showOthers) return "";
+  function renderMainSection(label, lists) {
+    const sList = lists.short.length ? "<ul class='main-list'><li>" +
+      lists.short.join("</li><li>") + "</li></ul>" : "-";
+    const lList = lists.long.length ? "<ul class='main-list'><li>" +
+      lists.long.join("</li><li>") + "</li></ul>" : "-";
 
-    const cls = isMain ? "lang-main" : "lang-secondary " + code;
-    const label = isMain ? title + " (Hauptausgabe)" : title;
     return `
-      <div class="lang-block">
-        <div class="lang-title">${label}</div>
-        <div class="${cls}">${parts.length ? parts.join(", ") : "-"}</div>
+      <div>
+        <div class="section-title">${label} – Kurzformen</div>
+        ${sList}
+        <div class="section-title" style="margin-top:6px;">${label} – Langformen</div>
+        ${lList}
       </div>
     `;
   }
 
+  function shortJoined(list) {
+    return list.length ? list.join(", ") : "-";
+  }
+
+  let secondaryHtml = "";
+  if (showOthers) {
+    if (mainLang !== "de") {
+      secondaryHtml += `<div class="secondary-row"><span class="secondary-label">Deutsch:</span>${shortJoined(deShort)}</div>`;
+    }
+    if (mainLang !== "en") {
+      secondaryHtml += `<div class="secondary-row"><span class="secondary-label">English:</span>${shortJoined(enShort)}</div>`;
+    }
+    if (mainLang !== "fr") {
+      secondaryHtml += `<div class="secondary-row"><span class="secondary-label">Français:</span>${shortJoined(frShort)}</div>`;
+    }
+  }
+
+  const mainLabel = mainLang === "de" ? "Deutsch" : mainLang === "en" ? "English" : "Français";
+
   const html =
     header +
-    renderLangBlock("de", "Deutsch",  deParts) +
-    renderLangBlock("en", "English", enParts) +
-    renderLangBlock("fr", "Français", frParts);
+    renderMainSection(mainLabel, main) +
+    secondaryHtml;
 
   document.getElementById('output').innerHTML = html;
 }
 
+// Dark Mode & Schriftgröße
+const bodyEl = document.body;
+
+function applyDarkMode(on) {
+  if (on) {
+    bodyEl.style.background = "#0f172a";
+    document.documentElement.style.setProperty("--card-bg", "#111827");
+    document.documentElement.style.setProperty("--bg", "#0f172a");
+    document.documentElement.style.setProperty("--text-main", "#e5e7eb");
+    document.documentElement.style.setProperty("--text-muted", "#9ca3af");
+    document.documentElement.style.setProperty("--border", "#1f2937");
+  } else {
+    document.documentElement.style.setProperty("--bg", "#f5f7fb");
+    document.documentElement.style.setProperty("--card-bg", "#ffffff");
+    document.documentElement.style.setProperty("--text-main", "#111827");
+    document.documentElement.style.setProperty("--text-muted", "#6b7280");
+    document.documentElement.style.setProperty("--border", "#e5e7eb");
+    bodyEl.style.background = "var(--bg)";
+  }
+}
+
+function applyFontSize(mode) {
+  if (mode === "large") {
+    bodyEl.style.fontSize = "110%";
+  } else if (mode === "xlarge") {
+    bodyEl.style.fontSize = "125%";
+  } else {
+    bodyEl.style.fontSize = "100%";
+  }
+}
+
+document.getElementById('darkToggle').addEventListener('change', (e) => {
+  applyDarkMode(e.target.checked);
+});
+
+document.getElementById('fontSizeToggle').addEventListener('change', (e) => {
+  applyFontSize(e.target.value);
+});
+
+// Button-Handler
 document.getElementById('btn').addEventListener('click', doTranslate);
 </script>
 </body>
